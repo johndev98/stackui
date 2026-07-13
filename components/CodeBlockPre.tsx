@@ -152,7 +152,7 @@ export default function CodeBlockPre({
             </motion.div>
             <MotionTooltip
               show={showTooltipLines}
-              text={showLines ? "Hide line numbers" : "Show line numbers"}
+              text={showLines ? "Ấn số dòng" : "Hiện số dòng"}
             />
           </button>
 
@@ -193,7 +193,7 @@ export default function CodeBlockPre({
             </AnimatePresence>
             <MotionTooltip
               show={showTooltipCopy}
-              text={copied ? "Copied!" : "Copy code"}
+              text={copied ? "Copied!" : "Sao chép"}
             />
           </button>
         </div>
@@ -271,11 +271,7 @@ export default function CodeBlockPre({
             >
               <ChevronUp size={14} />
             </motion.div>
-            <span>{isExpanded ? "Collapse" : "Expand"}</span>
-            <MotionTooltip
-              show={showTooltipExpand}
-              text={isExpanded ? "Collapse code" : "Expand code"}
-            />
+            <span>{isExpanded ? "Thu nhỏ" : "Xem thêm"}</span>
           </motion.button>
         )}
       </AnimatePresence>
