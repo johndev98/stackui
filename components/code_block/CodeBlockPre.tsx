@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, type ComponentProps } from "react";
 import { motion, AnimatePresence, type MotionProps } from "motion/react";
 import { AlignLeft, Copy, Check, ChevronUp } from "lucide-react";
-import { MotionTooltip } from "./MotionTooltip";
+import { MotionTooltip } from "../tooltip/MotionTooltip";
 
 type PreProps = ComponentProps<"pre"> & MotionProps;
 
