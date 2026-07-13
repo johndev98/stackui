@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "hast-util-to-jsx-runtime": "^2.3.6",
+    "lucide-react": "^1.24.0",
+    "motion": "^12.42.2",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -20,6 +23,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "shiki": "^4.3.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
