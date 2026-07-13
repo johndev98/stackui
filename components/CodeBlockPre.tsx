@@ -282,13 +282,18 @@ export default function CodeBlockPre({
           --line-number-opacity: 1;
           --line-number-scale: 1;
           --line-number-translate: 0px;
+
           background: #141a18 !important;
+          
+          /*Font Size của code */
           font-size: 1rem;
+
           line-height: 1.7;
           margin: 0 !important;
 
           /*PADDING toàn bộ nội dung bên trong*/
           padding: 3rem 1rem 2rem 1rem !important;
+
           position: relative;
           width: 100%;
         }
