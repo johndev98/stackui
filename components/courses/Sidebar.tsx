@@ -16,8 +16,9 @@ const SIDEBAR_COLLAPSED = 68;
 
 type SidebarProps = {
   collapsed: boolean;
+  onNavigate?: () => void;
 };
-export default function Sidebar({ collapsed }: SidebarProps) {
+export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
   const pathname = usePathname();
   const width = collapsed ? SIDEBAR_COLLAPSED : SIDEBAR_WIDTH;
   const [mounted, setMounted] = useState(false);
@@ -73,6 +74,7 @@ export default function Sidebar({ collapsed }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onNavigate}
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all
             ${
               active
