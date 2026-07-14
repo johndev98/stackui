@@ -1,0 +1,11 @@
+{
+  "Header": {
+    "home": "Trang chủ",
+    "blog": "Blog",
+    "ui": "Giao diện"
+  },
+  "Home": {
+    "title": "Cimimo",
+    "description": "Thư viện component giao diện hiện đại"
+  }
+}

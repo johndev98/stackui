@@ -4,12 +4,6 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      {/* <Header /> */}
-
-      <main className="mx-auto w-full max-w-7xl px-6">{children}</main>
-
-      {/* <Footer /> */}
-    </>
+    <main className="mx-auto w-full max-w-7xl px-6">{children}</main>
   );
 }

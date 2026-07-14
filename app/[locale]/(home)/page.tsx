@@ -1,13 +1,27 @@
-import { CodeBlock } from "@/components/code_block/CodeBlock";
+import {CodeBlock} from '@/components/code_block/CodeBlock';
+import {setRequestLocale} from 'next-intl/server';
+import {useTranslations} from 'next-intl';
 
-export default function Home() {
+type Props = {
+  params: Promise<{locale: string}>;
+};
+
+export default async function Home({params}: Props) {
+  const {locale} = await params;
+  setRequestLocale(locale);
+
+  return <HomeContent />;
+}
+
+function HomeContent() {
+  const t = useTranslations('Home');
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center  gap-5  ">
-      <h1 className=" text-9xl font-extrabold text-primary text-center ">
-        Cimimo
+    <div className="flex flex-1 flex-col items-center justify-center gap-5">
+      <h1 className="text-9xl font-extrabold text-primary text-center">
+        {t('title')}
       </h1>
 
-      {/* Code block giống hình */}
       <CodeBlock lang="tsx">
         {`
 import { ThemeModeScript } from 'flowbite-react';

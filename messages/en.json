@@ -1,0 +1,11 @@
+{
+  "Header": {
+    "home": "Home",
+    "blog": "Blog",
+    "ui": "UI"
+  },
+  "Home": {
+    "title": "Cimimo",
+    "description": "A modern UI component library"
+  }
+}
