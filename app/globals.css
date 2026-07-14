@@ -2,8 +2,8 @@
 
 :root {
   --background: #0e1312;
-  --foreground: #ededec;
-  --primary: #6366f1;
+  --foreground: hwb(60 93% 7%);
+  --primary: #fbbf24;
   --secondary: #14b8a6;
   --accent: #f97316;
   --border: #334155;
@@ -29,4 +29,3 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist), system-ui, sans-serif;
 }
-

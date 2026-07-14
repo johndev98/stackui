@@ -286,7 +286,7 @@ export default function CodeBlockPre({
           background: #141a18 !important;
           
           /*Font Size của code */
-          font-size: 1rem;
+          font-size: 0.9rem;
 
           line-height: 1.7;
           margin: 0 !important;

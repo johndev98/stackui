@@ -2,8 +2,10 @@ import { CodeBlock } from "@/components/code_block/CodeBlock";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center  gap-5 p-8 ">
-      <h1 className=" text-5xl text-center">Dart cơ bản 2026</h1>
+    <div className="flex flex-col flex-1 items-center justify-center  gap-5  ">
+      <h1 className=" text-9xl font-extrabold text-primary text-center ">
+        Cimimo
+      </h1>
 
       {/* Code block giống hình */}
       <CodeBlock lang="tsx">
@@ -20,7 +22,8 @@ export default function RootLayout({ children }) {
         </html>
     );
 }
-    import { ThemeModeScript } from 'flowbite-react';
+    
+import { ThemeModeScript } from 'flowbite-react';
 
 export default function RootLayout({ children }) {
     return (

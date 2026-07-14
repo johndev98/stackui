@@ -32,7 +32,7 @@ export default function RootLayout({
       lang="vi"
       className={`${geist.variable} ${geistMono.variable} ${inter.variable}  h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
