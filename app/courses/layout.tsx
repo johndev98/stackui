@@ -1,4 +1,5 @@
 import { fontClasses } from "../fonts";
+import CoursesShell from "./CoursesShell";
 
 export default function CoursesLayout({
   children,
@@ -6,8 +7,10 @@ export default function CoursesLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi" className={fontClasses}>
-      <body>{children}</body>
+    <html lang="vi" className={`${fontClasses} h-full`}>
+      <body className="h-full overflow-hidden bg-background">
+        <CoursesShell>{children}</CoursesShell>
+      </body>
     </html>
   );
 }
