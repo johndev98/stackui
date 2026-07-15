@@ -52,7 +52,20 @@ export default function Header() {
           </Link>
         </nav>
 
-        <button onClick={toggleLocale}>...</button>
+        <button
+          onClick={toggleLocale}
+          className="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
+        >
+          <span className={locale === "vi" ? "font-bold" : "opacity-50"}>
+            {" "}
+            VI{" "}
+          </span>{" "}
+          <span className="text-border">|</span>{" "}
+          <span className={locale === "en" ? "font-bold" : "opacity-50"}>
+            {" "}
+            EN{" "}
+          </span>
+        </button>
       </div>
     </header>
   );
