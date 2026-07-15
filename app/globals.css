@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Ẩn scrollbar trên Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ẩn scrollbar trên Firefox */
+* {
+  scrollbar-width: none;
+}
 :root {
   --page-bg: #0a1210;
   --text-heading: #ededec;

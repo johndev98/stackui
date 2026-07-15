@@ -14,7 +14,7 @@ export default function CoursesShell({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="mx-auto flex h-full max-w-screen-2xl gap-3 p-0 md:p-3">
+    <div className="mx-auto flex h-full max-w-screen-2xl gap-3 p-0 md:p-3 ">
       {/* Desktop sidebar */}
       <div className="hidden md:block">
         <Sidebar collapsed={collapsed} />

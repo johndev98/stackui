@@ -8,7 +8,7 @@ export default function CoursesLayout({
 }) {
   return (
     <html lang="vi" className={`${fontClasses} h-full`}>
-      <body data-page="courses" className="h-full overflow-hidden bg-page-bg">
+      <body data-page="courses" className="h-full overflow-hidden bg-page-bg ">
         <CoursesShell>{children}</CoursesShell>
       </body>
     </html>
