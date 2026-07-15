@@ -14,13 +14,13 @@ export default function CoursesShell({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="mx-auto flex h-full max-w-screen-2xl gap-3 p-0 md:p-5">
+    <div className="mx-auto flex h-full max-w-screen-2xl gap-3 p-0 md:p-3">
       {/* Desktop sidebar */}
       <div className="hidden md:block">
         <Sidebar collapsed={collapsed} />
       </div>
 
-      <main className="flex flex-1 flex-col md:rounded-2xl border-2 border-gray-600">
+      <main className="flex flex-1 flex-col md:rounded-2xl md:border-2 md:border-gray-600">
         <header className="flex h-16 items-center border-b-2 border-gray-600 px-6">
           {/* Desktop: toggle collapse */}
           <button
@@ -37,7 +37,7 @@ export default function CoursesShell({
           {/* Mobile: hamburger */}
           <button
             onClick={() => setMobileOpen(true)}
-            className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl hover:bg-foreground/5"
+            className="md:hidden flex h-10 w-10 items-center justify-center  rounded-xl hover:bg-page-bg/5"
           >
             <Menu size={18} />
           </button>
