@@ -20,22 +20,25 @@ export function CourseCard({
   return (
     <motion.div
       whileHover={{
-        borderColor: "var(--color-primary)",
+        scale: 1.025,
+        borderColor: "var(--primary)",
       }}
       transition={{ duration: 0.3 }}
-      className="flex w-full min-h-[375px] max-w-2xs min-w-3xs flex-col overflow-hidden rounded-xl border-2 border-dotted border-gray-600 select-none"
+      className="flex w-full min-h-93.75 max-w-2xs min-w-3xs flex-col  border border-transparent overflow-hidden rounded-xl bg-(--card-bg) select-none "
     >
       {/* Ảnh */}
       <div className="p-1">
         <div className="relative h-40 w-full overflow-hidden rounded-lg">
-          <motion.span
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            whileHover={{ scale: 1.2 }}
-            className="absolute top-2 right-2 z-10 rounded-lg bg-red-600 px-2 py-0.5 text-sm font-bold"
-          >
-            -{discount}%
-          </motion.span>
+          {price > 0 && (
+            <motion.span
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              whileHover={{ scale: 1.2 }}
+              className="absolute top-2 right-2 z-10 rounded-lg bg-red-600 px-2 py-0.5 text-sm font-bold"
+            >
+              -{discount}%
+            </motion.span>
+          )}
 
           <motion.div
             whileHover={{ scale: 1.1 }}
@@ -71,12 +74,14 @@ export function CourseCard({
         {/* Footer luôn nằm dưới */}
         <div className="flex justify-between">
           <div>
-            <span className="text-content text-sm line-through">
-              {oldPrice.toLocaleString("vi-VN")}đ
+            <span
+              className={`text-content text-md line-through ${oldPrice === 0 ? "invisible" : ""}`}
+            >
+              {oldPrice > 0 ? `${oldPrice.toLocaleString("vi-VN")}đ` : "\u00A0"}
             </span>
 
             <div className="text-xl font-bold">
-              {price.toLocaleString("vi-VN")}đ
+              {price === 0 ? "Miễn phí" : `${price.toLocaleString("vi-VN")}đ`}
             </div>
           </div>
 

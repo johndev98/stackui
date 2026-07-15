@@ -1,13 +1,39 @@
 @import "tailwindcss";
 
 /* Ẩn scrollbar trên Webkit (Chrome, Safari, Edge) */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   display: none;
-}
+} */
 
 /* Ẩn scrollbar trên Firefox */
-* {
+/* * {
   scrollbar-width: none;
+} */
+
+/* Chrome, Safari, Edge */
+
+::-webkit-scrollbar {
+  width: 6px; /* Scrollbar width */
+}
+::-webkit-scrollbar-track {
+  background: #ffffff20; /* Track color */
+}
+::-webkit-scrollbar-thumb {
+  background: #fbbf24; /* Thumb color */
+  border-radius: 10px; /* Thumb border radius */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fbbf24; /* Thumb color on hover */
+  border-radius: 10px; /* Thumb border radius */
+}
+
+/* Firefox specific */
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #fbbf24 #ffffff20;
+    border-radius: 10px; /* Thumb border radius */
+  }
 }
 :root {
   --page-bg: #0a1210;
@@ -51,6 +77,9 @@
   --page-bg: #0d0c11;
   --text-heading: #ededec;
   --text-content: #868290;
+  --sidebar-bg: #06060a;
+  --main-bg: #13121b;
+  --card-bg: #1d1c27;
 }
 
 [data-page="learn"] {

@@ -35,7 +35,7 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
           ? { type: "spring", visualDuration: 0.25, bounce: 0.08 }
           : undefined
       }
-      className="sticky top-0 flex h-full flex-col overflow-hidden rounded-2xl border-2 border-gray-600"
+      className="sticky top-0 flex h-full flex-col overflow-hidden rounded-xl bg-(--sidebar-bg)"
     >
       {/* Logo */}
       <div className="flex h-16 items-center px-5">
@@ -48,7 +48,7 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="font-extrabold text-2xl text-primary"
+                className="font-extrabold text-3xl text-primary "
               >
                 Ci
               </motion.span>
@@ -59,7 +59,7 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="font-extrabold text-2xl text-primary"
+                className="font-extrabold text-3xl text-primary"
               >
                 Cimimo
               </motion.span>

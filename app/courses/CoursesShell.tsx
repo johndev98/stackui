@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { PanelLeftClose, PanelLeftOpen, Menu, X } from "lucide-react";
 import Sidebar from "@/components/courses/Sidebar";
@@ -12,25 +12,25 @@ export default function CoursesShell({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  const scrollRef = useRef<HTMLDivElement>(null);
   return (
-    <div className="mx-auto flex h-full max-w-screen-2xl gap-3 p-0 md:p-3 ">
+    <div className="mx-auto flex h-full max-w-350 gap-2 p-0 md:p-3 ">
       {/* Desktop sidebar */}
       <div className="hidden md:block">
         <Sidebar collapsed={collapsed} />
       </div>
 
-      <main className="flex flex-1 flex-col md:rounded-2xl md:border-2 md:border-gray-600">
-        <header className="flex h-16 items-center border-b-2 border-gray-600 px-6">
+      <main className="flex flex-1 flex-col md:rounded-xl bg-(--main-bg)">
+        <header className="flex h-16 items-center border-b border-white/5 px-6">
           {/* Desktop: toggle collapse */}
           <button
             onClick={() => setCollapsed((v) => !v)}
             className="hidden md:flex h-10 w-10 items-center justify-center rounded-xl hover:bg-foreground/5"
           >
             {collapsed ? (
-              <PanelLeftOpen size={18} />
+              <PanelLeftOpen size={23} />
             ) : (
-              <PanelLeftClose size={18} />
+              <PanelLeftClose size={23} />
             )}
           </button>
 
