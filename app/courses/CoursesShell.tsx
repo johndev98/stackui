@@ -20,8 +20,8 @@ export default function CoursesShell({
         <Sidebar collapsed={collapsed} />
       </div>
 
-      <main className="flex flex-1 flex-col md:rounded-2xl bg-card">
-        <header className="flex h-16 items-center border-b px-6">
+      <main className="flex flex-1 flex-col md:rounded-2xl border-2 border-gray-600">
+        <header className="flex h-16 items-center border-b-2 border-gray-600 px-6">
           {/* Desktop: toggle collapse */}
           <button
             onClick={() => setCollapsed((v) => !v)}
@@ -43,7 +43,7 @@ export default function CoursesShell({
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">{children}</div>
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 ">{children}</div>
       </main>
 
       {/* Mobile right sheet */}

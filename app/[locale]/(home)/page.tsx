@@ -17,10 +17,10 @@ async function HomeContent() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-5">
-      <h1 className="text-9xl font-extrabold text-primary text-center">
+      <h1 className="text-9xl font-extrabold text-heading text-center">
         {t("title")}
       </h1>
-      <span>{t("description")}</span>
+      <span className="text-content">{t("description")}</span>
       <CodeBlock lang="tsx">
         {`
 import { ThemeModeScript } from 'flowbite-react';

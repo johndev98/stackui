@@ -24,7 +24,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} className={fontClasses}>
-      <body>
+      <body className="overflow-y-overlay">
         <NextIntlClientProvider locale={locale}>
           <Header />
           {children}

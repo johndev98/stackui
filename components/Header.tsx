@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
+import Link from "next/link";
 
 export default function Header() {
   const t = useTranslations("Header");
@@ -14,43 +15,42 @@ export default function Header() {
     router.replace(pathname, { locale: next });
   };
 
+  const navClass = (href: string) =>
+    `transition-colors hover:text-primary ${
+      href === "/"
+        ? pathname === "/"
+        : pathname.startsWith(href)
+          ? "text-primary"
+          : ""
+    }`;
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
+    <header className="sticky top-0 z-50 bg-page-bg/80 backdrop-blur-lg">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
         <span className="font-extrabold text-4xl text-primary">Cimimo</span>
+
         <nav className="flex items-center gap-10 text-sm font-medium">
-          <a
-            href={`/${locale}`}
-            className="hover:text-primary transition-colors"
-          >
+          <Link href={`/${locale}`} className={navClass("/")}>
             {t("home")}
-          </a>
-          <a
-            href={`/${locale}/blog`}
-            className="hover:text-primary transition-colors"
-          >
+          </Link>
+
+          <Link href={`/${locale}/blog`} className={navClass("/blog")}>
             {t("blog")}
-          </a>
-          <a
-            href={`/${locale}/ui`}
-            className="hover:text-primary transition-colors"
-          >
+          </Link>
+
+          <Link href={`/${locale}/ui`} className={navClass("/ui")}>
             {t("ui")}
-          </a>
+          </Link>
+
+          <Link
+            href="/courses"
+            className="transition-colors hover:text-primary"
+          >
+            {t("courses")}
+          </Link>
         </nav>
 
-        <button
-          onClick={toggleLocale}
-          className="flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium hover:bg-accent transition-colors"
-        >
-          <span className={locale === "vi" ? "font-bold" : "opacity-50"}>
-            VI
-          </span>
-          <span className="text-border">|</span>
-          <span className={locale === "en" ? "font-bold" : "opacity-50"}>
-            EN
-          </span>
-        </button>
+        <button onClick={toggleLocale}>...</button>
       </div>
     </header>
   );

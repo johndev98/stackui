@@ -2,7 +2,8 @@
   "Header": {
     "home": "Home",
     "blog": "Blog",
-    "ui": "UI"
+    "ui": "UI",
+    "courses": "Courses"
   },
   "Home": {
     "title": "Cimimo",

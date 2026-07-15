@@ -7,7 +7,7 @@ export default function LearnLayout({
 }) {
   return (
     <html lang="vi" className={fontClasses}>
-      <body className="">
+      <body data-page="learn" className="min-h-screen bg-page-bg">
         <div className="mx-auto w-full max-w-screen-2xl px-6">{children}</div>
       </body>
     </html>

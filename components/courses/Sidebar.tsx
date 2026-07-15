@@ -35,35 +35,37 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
           ? { type: "spring", visualDuration: 0.25, bounce: 0.08 }
           : undefined
       }
-      className="sticky top-0 flex h-full flex-col overflow-hidden rounded-2xl bg-card"
+      className="sticky top-0 flex h-full flex-col overflow-hidden rounded-2xl border-2 border-gray-600"
     >
       {/* Logo */}
       <div className="flex h-16 items-center px-5">
-        <AnimatePresence mode="wait" initial={false}>
-          {collapsed ? (
-            <motion.span
-              key="short"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="font-extrabold text-2xl text-primary"
-            >
-              Ci
-            </motion.span>
-          ) : (
-            <motion.span
-              key="full"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="font-extrabold text-2xl text-primary"
-            >
-              Cimimo
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <Link href="/">
+          <AnimatePresence mode="wait" initial={false}>
+            {collapsed ? (
+              <motion.span
+                key="short"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="font-extrabold text-2xl text-primary"
+              >
+                Ci
+              </motion.span>
+            ) : (
+              <motion.span
+                key="full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                className="font-extrabold text-2xl text-primary"
+              >
+                Cimimo
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
       </div>
 
       {/* Nav items */}
@@ -78,8 +80,8 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all
             ${
               active
-                ? "bg-primary text-background"
-                : "text-foreground/60 hover:bg-foreground/5 hover:text-foreground"
+                ? "bg-primary text-page-bg"
+                : "text-heading/80 hover:bg-foreground/5 hover:text-foreground"
             }`}
             >
               <item.icon size={20} />

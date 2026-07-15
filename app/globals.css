@@ -1,31 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0e1312;
-  --foreground: #ededec;
+  --page-bg: #0e1312;
+  --text-heading: #ededec;
+  --text-content: #958d82;
   --primary: #fbbf24;
-  --secondary: #14b8a6;
-  --accent: #f97316;
-  --border: #334155;
-  --card: #141a18;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-page-bg: var(--page-bg);
+  --color-heading: var(--text-heading);
+  --color-content: var(--text-content);
+
   --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --color-accent: var(--accent);
-  --color-border: var(--border);
-  --color-card: var(--card);
 
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geistMono);
   --font-inter: var(--font-inter);
 }
 
+/* Per-page themes */
+[data-page="home"] {
+  --page-bg: #0a1210;
+  --text-heading: #ededec;
+  --text-content: #7c8e86;
+}
+
+[data-page="blog"] {
+  --page-bg: #0e1312;
+  --text-heading: #ededec;
+  --text-content: #958d82;
+}
+
+[data-page="ui"] {
+  --page-bg: #0c0d11;
+  --text-heading: #ededec;
+  --text-content: #818690;
+}
+
+[data-page="courses"] {
+  --page-bg: #0d0c11;
+  --text-heading: #ededec;
+  --text-content: #868290;
+}
+
+[data-page="learn"] {
+  --page-bg: #0d0c11;
+  --text-heading: #ededec;
+  --text-content: #868290;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--page-bg);
+  color: var(--text-heading);
   font-family: var(--font-geist), system-ui, sans-serif;
 }
