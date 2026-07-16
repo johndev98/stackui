@@ -40,8 +40,8 @@ export default function SortDropdown({ value, onChange }: SortDropdownProps) {
       <motion.button
         whileTap={{ scale: 0.97 }}
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 text-heading hover:bg-white/10 transition-colors focus:outline-none
-    h-10 w-10 justify-center md:w-auto md:px-3.5 md:h-auto"
+        className="flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors focus:outline-none
+     justify-center md:w-auto md:px-2 md:py-1 md:h-auto"
       >
         {/* Mobile: chỉ icon */}
         <Funnel size={18} className="md:hidden" />
