@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { PanelLeftClose, PanelLeftOpen, Menu, X } from "lucide-react";
 import Sidebar from "@/components/courses/Sidebar";
@@ -12,7 +12,6 @@ export default function CoursesShell({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
   return (
     <div className="mx-auto flex h-full max-w-350 gap-2 p-0 md:p-3 ">
       {/* Desktop sidebar */}
@@ -34,12 +33,34 @@ export default function CoursesShell({
             )}
           </button>
 
-          {/* Mobile: hamburger */}
+          {/* Mobile: Menu ↔ Close */}
           <button
-            onClick={() => setMobileOpen(true)}
-            className="md:hidden flex h-10 w-10 items-center justify-center  rounded-xl hover:bg-page-bg/5"
+            onClick={() => setMobileOpen((v) => !v)}
+            className="md:hidden flex h-10 w-10 items-center focus:outline-none justify-center rounded-xl hover:bg-page-bg/5"
           >
-            <Menu size={18} />
+            <AnimatePresence mode="wait" initial={false}>
+              {mobileOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <X size={23} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Menu size={23} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </button>
         </header>
 
@@ -62,26 +83,16 @@ export default function CoursesShell({
 
             {/* Sheet */}
             <motion.div
-              initial={{ x: "100%" }}
+              initial={{ x: "-100%" }}
               animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              exit={{ x: "-100%" }}
               transition={{
                 type: "spring",
                 visualDuration: 0.25,
                 bounce: 0.08,
               }}
-              className="fixed right-0 top-0 z-50 flex h-full w-65 flex-col rounded-l-2xl bg-card p-5 md:hidden"
+              className="fixed left-0 top-0 z-50 flex h-full w-65 flex-col rounded-r-2xl mt-16 md:hidden"
             >
-              {/* Close button */}
-              <div className="flex justify-end mb-2">
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-foreground/5"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
               <Sidebar
                 collapsed={false}
                 onNavigate={() => setMobileOpen(false)}

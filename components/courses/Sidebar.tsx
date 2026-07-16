@@ -35,7 +35,7 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
           ? { type: "spring", visualDuration: 0.25, bounce: 0.08 }
           : undefined
       }
-      className="sticky top-0 flex h-full flex-col overflow-hidden rounded-xl bg-(--sidebar-bg)"
+      className="sticky top-0 flex h-full flex-col overflow-hidden rounded-xl bg-(--main-bg) md:bg-(--sidebar-bg)"
     >
       {/* Logo */}
       <div className="flex h-16 items-center px-5">

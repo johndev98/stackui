@@ -24,7 +24,7 @@ export function CourseCard({
         borderColor: "var(--primary)",
       }}
       transition={{ duration: 0.3 }}
-      className="flex w-full min-h-93.75 max-w-2xs min-w-3xs flex-col  border border-transparent overflow-hidden rounded-xl bg-(--card-bg) select-none "
+      className="flex w-full min-h-93.75 max-w-2xs min-w-3xs flex-col  border-dotted border-2 border-transparent overflow-hidden rounded-xl bg-(--card-bg) select-none "
     >
       {/* Ảnh */}
       <div className="p-1">
@@ -43,12 +43,13 @@ export function CourseCard({
           <motion.div
             whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.3 }}
-            className="h-full w-full"
+            className="h-full w-full relative "
           >
             <Image
               src={thumbnail}
               alt={title}
               fill
+              loading="eager"
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 320px"
             />
