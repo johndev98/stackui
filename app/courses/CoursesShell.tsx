@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { PanelLeftClose, PanelLeftOpen, Menu, X } from "lucide-react";
 import Sidebar from "@/components/courses/Sidebar";
+import { SearchProvider } from "@/components/courses/context/SearchContext";
+import SearchInput from "@/components/courses/SearchInput";
 
 export default function CoursesShell({
   children,
@@ -12,60 +14,82 @@ export default function CoursesShell({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const tabletQuery = window.matchMedia(
+      "(min-width: 768px) and (max-width: 1023px)",
+    );
+
+    // Set giá trị ban đầu
+    if (tabletQuery.matches) setCollapsed(true);
+
+    // Listen cho resize
+    function handleChange(e: MediaQueryListEvent) {
+      setCollapsed(e.matches);
+    }
+    tabletQuery.addEventListener("change", handleChange);
+    return () => tabletQuery.removeEventListener("change", handleChange);
+  }, []);
+
   return (
     <div className="mx-auto flex h-full max-w-350 gap-2 p-0 md:p-3 ">
       {/* Desktop sidebar */}
       <div className="hidden md:block">
         <Sidebar collapsed={collapsed} />
       </div>
-
-      <main className="flex flex-1 flex-col md:rounded-xl bg-(--main-bg)">
-        <header className="flex h-16 items-center border-b border-white/5 px-6">
-          {/* Desktop: toggle collapse */}
-          <button
-            onClick={() => setCollapsed((v) => !v)}
-            className="hidden md:flex h-10 w-10 items-center justify-center rounded-xl hover:bg-foreground/5"
-          >
-            {collapsed ? (
-              <PanelLeftOpen size={23} />
-            ) : (
-              <PanelLeftClose size={23} />
-            )}
-          </button>
-
-          {/* Mobile: Menu ↔ Close */}
-          <button
-            onClick={() => setMobileOpen((v) => !v)}
-            className="md:hidden flex h-10 w-10 items-center focus:outline-none justify-center rounded-xl hover:bg-page-bg/5"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {mobileOpen ? (
-                <motion.div
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <X size={23} />
-                </motion.div>
+      <SearchProvider search={search} setSearch={setSearch}>
+        <main className="flex flex-1 flex-col md:rounded-xl bg-(--main-bg)">
+          <header className="flex h-16 items-center border-b border-white/5 px-6">
+            {/* Desktop: toggle collapse */}
+            <button
+              onClick={() => setCollapsed((v) => !v)}
+              className="hidden md:flex h-10 w-10 items-center justify-center rounded-xl hover:bg-foreground/5"
+            >
+              {collapsed ? (
+                <PanelLeftOpen size={23} />
               ) : (
-                <motion.div
-                  key="menu"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Menu size={23} />
-                </motion.div>
+                <PanelLeftClose size={23} />
               )}
-            </AnimatePresence>
-          </button>
-        </header>
+            </button>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 ">{children}</div>
-      </main>
+            {/* Mobile: Menu ↔ Close */}
+            <button
+              onClick={() => setMobileOpen((v) => !v)}
+              className="md:hidden flex h-10 w-10 items-center focus:outline-none justify-center rounded-xl hover:bg-page-bg/5"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {mobileOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <X size={23} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Menu size={23} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
+            <SearchInput />
+          </header>
+
+          <div className="flex-1 overflow-y-auto px-4 py-1 md:px-6 md:py-3 ">
+            {children}
+          </div>
+        </main>
+      </SearchProvider>
 
       {/* Mobile right sheet */}
       <AnimatePresence>

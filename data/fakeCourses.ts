@@ -6,7 +6,7 @@ export const fakeCourses: CourseCardProps[] = [
     thumbnail:
       "https://images.pexels.com/photos/1591061/pexels-photo-1591061.jpeg",
     title: "TypeScript cơ bản",
-    description: "Học TypeScript từ cơ bản đến thực chiến với React & Next.js.",
+    description: "Học TypeScript từ cơ bản đến thực chiến với React & Nextjs.",
     oldPrice: 0,
     price: 0,
     students: 1245,
@@ -17,7 +17,7 @@ export const fakeCourses: CourseCardProps[] = [
     id: "course2",
     thumbnail:
       "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg",
-    title: "React.js từ Zero đến Hero",
+    title: "ReactJS từ Zero đến Hero",
     description:
       "Nắm vững React hiện đại với Hooks, Context và thực hành dự án.",
     oldPrice: 799000,
@@ -30,8 +30,8 @@ export const fakeCourses: CourseCardProps[] = [
     id: "course3",
     thumbnail:
       "https://images.pexels.com/photos/574071/pexels-photo-574071.jpeg",
-    title: "Next.js Fullstack",
-    description: "Xây dựng ứng dụng Fullstack với Next.js App Router.",
+    title: "Nextjs Fullstack",
+    description: "Xây dựng ứng dụng Fullstack với Nextjs App Router.",
     oldPrice: 699000,
     price: 499000,
     students: 1890,
@@ -68,8 +68,8 @@ export const fakeCourses: CourseCardProps[] = [
     id: "course6",
     thumbnail:
       "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg",
-    title: "Node.js & Express API",
-    description: "Xây dựng RESTful API với Node.js, Express và MongoDB từ đầu.",
+    title: "NodeJS & Express API",
+    description: "Xây dựng RESTful API với Nodejs, Express và MongoDB từ đầu.",
     oldPrice: 899000,
     price: 449000,
     students: 2810,
