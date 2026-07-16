@@ -100,7 +100,11 @@ export default function CoursesGrid() {
         <CategoryDropdown
           categories={allCategories}
           value={selectedCategory}
-          onChange={setSelectedCategory}
+          onChange={(cat) => {
+            setSelectedCategory(cat);
+            setFilter("popular");
+            setSort("popular");
+          }}
           align="left"
         />
         <FilterDropdown
