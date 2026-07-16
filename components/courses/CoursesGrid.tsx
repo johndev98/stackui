@@ -5,19 +5,13 @@ import { CourseCard } from "./CourseCard";
 import { useSearch } from "./context/SearchContext";
 import { useEffect, useState } from "react";
 import { CourseCardProps } from "@/types/course";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import SortDropdown from "./SortDropdown";
 
 const FILTERS = [
   { value: "popular", label: "Phổ biến nhất" },
   { value: "free", label: "Miễn phí" },
   { value: "paid", label: "Trả phí" },
-] as const;
-
-const SORT_OPTIONS = [
-  { value: "popular", label: "Phổ biến nhất" },
-  { value: "price-asc", label: "Giá thấp → cao" },
-  { value: "price-desc", label: "Giá cao → thấp" },
 ] as const;
 
 function searchCourses(q: string) {
@@ -122,26 +116,73 @@ export default function CoursesGrid() {
           <p className="text-content text-sm mb-4">
             {filteredMatched.length} kết quả cho &quot;{search}&quot;
           </p>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(16rem,18rem))] justify-center gap-6">
-            {filteredMatched.map((course) => (
-              <CourseCard key={course.id} {...course} />
-            ))}
-          </div>
+
+          <AnimatePresence mode="popLayout">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(16rem,18rem))] justify-center gap-6">
+              {filteredMatched.map((course) => (
+                <motion.div
+                  key={course.id}
+                  // ✅ Đặt layout="position" để ưu tiên chuyển động vị trí, không giãn nội dung
+                  layout="position"
+                  // ✅ Tách riêng transition cho layout và cho hiện/ẩn
+                  transition={{
+                    // 🎨 Chuyển động khi thay đổi vị trí/kích thước (resize/wrap)
+                    layout: {
+                      type: "spring",
+                      stiffness: 180, // giảm độ cứng để chậm hơn
+                      damping: 28, // giảm chậm nhẹ nhàng
+                      duration: 0.4, // đặt thời gian rõ ràng
+                    },
+                    // ✨ Chuyển động khi thêm/xóa phần tử
+                    opacity: { duration: 0.25 },
+                    scale: { duration: 0.25 },
+                    y: { duration: 0.25 },
+                  }}
+                  initial={{ opacity: 0, scale: 0.9, y: 12 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: -12 }}
+                >
+                  <CourseCard {...course} />
+                </motion.div>
+              ))}
+            </div>
+          </AnimatePresence>
           <hr className="border-neutral-700 my-10" />
         </>
       )}
 
-      {/* Remaining */}
+      {/* Remaining - áp dụng chính xác như trên */}
       {filteredRemaining.length > 0 && (
         <>
           {isSearching && filteredMatched.length > 0 && (
             <p className="text-content text-sm mb-4">Tất cả khóa học</p>
           )}
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(16rem,18rem))] justify-center gap-6">
-            {filteredRemaining.map((course) => (
-              <CourseCard key={course.id} {...course} />
-            ))}
-          </div>
+          <AnimatePresence mode="popLayout">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(16rem,18rem))] justify-center gap-6">
+              {filteredRemaining.map((course) => (
+                <motion.div
+                  key={course.id}
+                  layout="position"
+                  transition={{
+                    layout: {
+                      type: "spring",
+                      stiffness: 180,
+                      damping: 28,
+                      duration: 0.4,
+                    },
+                    opacity: { duration: 0.25 },
+                    scale: { duration: 0.25 },
+                    y: { duration: 0.25 },
+                  }}
+                  initial={{ opacity: 0, scale: 0.9, y: 12 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: -12 }}
+                >
+                  <CourseCard {...course} />
+                </motion.div>
+              ))}
+            </div>
+          </AnimatePresence>
         </>
       )}
     </div>
