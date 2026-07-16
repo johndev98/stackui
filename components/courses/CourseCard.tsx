@@ -3,9 +3,9 @@
 import { CourseCardProps } from "@/types/course";
 import { motion } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export function CourseCard({
-  id,
   thumbnail,
   title,
   description,
@@ -86,15 +86,16 @@ export function CourseCard({
             </div>
           </div>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.8 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => console.log(slug)}
-            className="hover:bg-heading hover:text-page-bg self-end rounded-lg border p-2"
-          >
-            Xem thêm
-          </motion.button>
+          <Link href={`/courses/${slug}`}>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.8 }}
+              transition={{ duration: 0.3 }}
+              className="hover:bg-heading hover:text-page-bg self-end rounded-lg border p-2 cursor-pointer"
+            >
+              Xem thêm
+            </motion.div>
+          </Link>
         </div>
       </div>
     </motion.div>

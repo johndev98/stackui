@@ -71,7 +71,11 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
       {/* Nav items */}
       <nav className="flex-1 space-y-2 px-3 pt-5">
         {navItems.map((item) => {
-          const active = pathname === item.href;
+          const active =
+            pathname === item.href ||
+            (item.href === "/courses" &&
+              pathname.startsWith("/courses/") &&
+              !pathname.startsWith("/courses/progress"));
           return (
             <Link
               key={item.href}

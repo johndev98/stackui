@@ -1,4 +1,3 @@
-import { CodeBlock } from "@/components/code_block/CodeBlock";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 type Props = {
@@ -21,35 +20,6 @@ async function HomeContent() {
         {t("title")}
       </h1>
       <span className="text-content">{t("description")}</span>
-      <CodeBlock lang="tsx">
-        {`
-import { ThemeModeScript } from 'flowbite-react';
-
-export default function RootLayout({ children }) {
-    return (
-        <html suppressHydrationWarning>
-            <head>
-                <ThemeModeScript />
-            </head>
-            <body>{children}</body>
-        </html>
-    );
-}
-    
-import { ThemeModeScript } from 'flowbite-react';
-
-export default function RootLayout({ children }) {
-    return (
-        <html suppressHydrationWarning>
-            <head>
-                <ThemeModeScript />
-            </head>
-            <body>{children}</body>
-        </html>
-    );
-}
-`}
-      </CodeBlock>
     </div>
   );
 }
