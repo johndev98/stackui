@@ -78,20 +78,22 @@ export default function CoursesGrid() {
   const matched = isSearching ? searchCourses(q) : [];
   const matchedIds = new Set(matched.map((c) => c.id));
 
-  const filteredMatched = applyFilterAndSort(
-    matched,
-    filter,
-    sort,
-    selectedCategory,
+  const filteredMatched = useMemo(
+    () => applyFilterAndSort(matched, filter, sort, selectedCategory),
+    [matched, filter, sort, selectedCategory],
   );
-  const filteredRemaining = isSearching
-    ? applyFilterAndSort(
-        fakeCourses.filter((c) => !matchedIds.has(c.id)),
-        filter,
-        sort,
-        selectedCategory,
-      )
-    : applyFilterAndSort(fakeCourses, filter, sort, selectedCategory);
+  const filteredRemaining = useMemo(
+    () =>
+      isSearching
+        ? applyFilterAndSort(
+            fakeCourses.filter((c) => !matchedIds.has(c.id)),
+            filter,
+            sort,
+            selectedCategory,
+          )
+        : applyFilterAndSort(fakeCourses, filter, sort, selectedCategory),
+    [isSearching, matchedIds, filter, sort, selectedCategory],
+  );
 
   return (
     <div>

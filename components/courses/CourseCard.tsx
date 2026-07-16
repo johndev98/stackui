@@ -49,7 +49,7 @@ export function CourseCard({
               src={thumbnail}
               alt={title}
               fill
-              loading="eager"
+              loading="lazy"
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 320px"
             />
