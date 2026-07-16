@@ -8,4 +8,5 @@ export type CourseCardProps = {
   students: number;
   maxOnline: number;
   slug: string;
+  categories: string[];
 };

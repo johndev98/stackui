@@ -35,7 +35,7 @@ export default function SortDropdown({ value, onChange }: SortDropdownProps) {
   }, []);
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative ">
       {/* Trigger button */}
       <motion.button
         whileTap={{ scale: 0.97 }}

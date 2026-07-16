@@ -30,10 +30,15 @@ export default function SearchInput() {
 
   const q = search.toLowerCase().trim();
 
+  // Update suggestions filter
   const suggestions = useMemo(() => {
     if (q.length < 1) return [];
     return fakeCourses
-      .filter((c) => c.title.toLowerCase().includes(q))
+      .filter(
+        (c) =>
+          c.title.toLowerCase().includes(q) ||
+          c.categories.some((cat) => cat.toLowerCase().includes(q)),
+      )
       .slice(0, 5)
       .map((c) => c.title);
   }, [q]);

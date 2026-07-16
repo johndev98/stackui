@@ -3,23 +3,19 @@
 import { fakeCourses } from "@/data/fakeCourses";
 import { CourseCard } from "./CourseCard";
 import { useSearch } from "./context/SearchContext";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CourseCardProps } from "@/types/course";
 import { AnimatePresence, motion } from "motion/react";
-import SortDropdown from "./SortDropdown";
-
-const FILTERS = [
-  { value: "popular", label: "Phổ biến nhất" },
-  { value: "free", label: "Miễn phí" },
-  { value: "paid", label: "Trả phí" },
-] as const;
+import CategoryDropdown from "./CategoryDropdown";
+import FilterDropdown from "./FilterDropdown";
 
 function searchCourses(q: string) {
   return fakeCourses
     .filter(
       (c) =>
         c.title.toLowerCase().includes(q) ||
-        c.description.toLowerCase().includes(q),
+        c.description.toLowerCase().includes(q) ||
+        c.categories.some((cat) => cat.toLowerCase().includes(q)),
     )
     .sort((a, b) => {
       const aTitle = a.title.toLowerCase().includes(q);
@@ -34,11 +30,13 @@ function applyFilterAndSort(
   courses: CourseCardProps[],
   filter: string,
   sort: string,
+  category: string | null,
 ) {
   let result = [...courses];
 
   if (filter === "free") result = result.filter((c) => c.price === 0);
   if (filter === "paid") result = result.filter((c) => c.price > 0);
+  if (category) result = result.filter((c) => c.categories.includes(category)); // ← thêm dòng này
 
   switch (sort) {
     case "price-asc":
@@ -59,49 +57,58 @@ export default function CoursesGrid() {
   const { search } = useSearch();
   const q = search.toLowerCase().trim();
   const isSearching = q.length >= 2;
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  const allCategories = useMemo(
+    () => [...new Set(fakeCourses.flatMap((c) => c.categories))].sort(),
+    [],
+  );
   const [filter, setFilter] = useState<"popular" | "free" | "paid">("popular");
   const [sort, setSort] = useState<"popular" | "price-asc" | "price-desc">(
     "popular",
   );
+
   // Auto-reset filter về "popular" khi search thay đổi
   useEffect(() => {
     setFilter("popular");
+    setSort("popular");
+    setSelectedCategory(null);
   }, [search]);
 
   const matched = isSearching ? searchCourses(q) : [];
   const matchedIds = new Set(matched.map((c) => c.id));
 
-  const filteredMatched = applyFilterAndSort(matched, filter, sort);
+  const filteredMatched = applyFilterAndSort(
+    matched,
+    filter,
+    sort,
+    selectedCategory,
+  );
   const filteredRemaining = isSearching
     ? applyFilterAndSort(
         fakeCourses.filter((c) => !matchedIds.has(c.id)),
         filter,
         sort,
+        selectedCategory,
       )
-    : applyFilterAndSort(fakeCourses, filter, sort);
+    : applyFilterAndSort(fakeCourses, filter, sort, selectedCategory);
 
   return (
     <div>
       {/* Filter bar */}
       <div className="flex items-center flex-wrap justify-between mb-6">
-        <div className="flex gap-2">
-          {FILTERS.map((f) => (
-            <motion.button
-              key={f.value}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setFilter(f.value)}
-              className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                filter === f.value
-                  ? "bg-primary text-page-bg"
-                  : "bg-white/5 text-content hover:bg-white/10 hover:text-heading"
-              }`}
-            >
-              {f.label}
-            </motion.button>
-          ))}
-        </div>
-        <SortDropdown value={sort} onChange={setSort} />
+        <CategoryDropdown
+          categories={allCategories}
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          align="left"
+        />
+        <FilterDropdown
+          filter={filter}
+          onFilterChange={setFilter}
+          sort={sort}
+          onSortChange={setSort}
+        />
       </div>
       {isSearching &&
         filteredMatched.length === 0 &&
