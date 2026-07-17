@@ -5,7 +5,8 @@ import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useSearch } from "./context/SearchContext";
 import { fakeCourses } from "@/data/fakeCourses";
-
+import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 function highlightMatch(text: string, query: string) {
   if (!query) return text;
   const index = text.toLowerCase().indexOf(query.toLowerCase());
@@ -23,12 +24,22 @@ function highlightMatch(text: string, query: string) {
 
 export default function SearchInput() {
   const { search, setSearch } = useSearch();
+  const router = useRouter();
+  const pathname = usePathname();
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
   const q = search.toLowerCase().trim();
+
+  const segments = pathname.split("/").filter(Boolean);
+  const isListingPage = segments.length === 1 && segments[0] === "courses";
+
+  const slug = segments.length === 2 ? segments[1] : null;
+  const isDetailPage =
+    slug !== null && fakeCourses.some((c) => c.slug === slug);
+
+  const isOtherPage = !isListingPage && !isDetailPage;
 
   // Update suggestions filter
   const suggestions = useMemo(() => {
@@ -39,8 +50,7 @@ export default function SearchInput() {
           c.title.toLowerCase().includes(q) ||
           c.categories.some((cat) => cat.toLowerCase().includes(q)),
       )
-      .slice(0, 5)
-      .map((c) => c.title);
+      .slice(0, 5);
   }, [q]);
 
   // Auto-focus input khi expand trên mobile
@@ -70,17 +80,41 @@ export default function SearchInput() {
       <div
         className={`absolute top-full left-0 right-0 mt-1 rounded-xl bg-(--card-bg) border border-white/10 shadow-lg z-50 overflow-hidden ${className}`}
       >
-        {suggestions.map((title) => (
+        {suggestions.map((course) => (
           <button
-            key={title}
+            key={course.slug}
             onClick={() => {
-              setSearch(title);
+              if (isDetailPage) {
+                // Detail → navigate course mới
+                router.push(`/courses/${course.slug}`);
+                setSearch("");
+              } else if (isOtherPage) {
+                // Other → redirect về /courses với search
+                router.push(`/courses`);
+                setSearch(course.title);
+              } else {
+                // Listing → set search text (filter)
+                setSearch(course.title);
+              }
               setShowSuggestions(false);
             }}
-            className="w-full px-4 py-2.5 text-left text-sm text-heading hover:bg-white/5 transition-colors flex items-center gap-2"
+            className="w-full px-4 py-2.5 text-left text-sm text-heading hover:bg-white/5 transition-colors flex items-center gap-3"
           >
-            <Search size={14} className="text-content shrink-0" />
-            <span>{highlightMatch(title, q)}</span>
+            <Image
+              src={course.thumbnail}
+              alt={course.title}
+              width={40}
+              height={40}
+              className="rounded-lg object-cover shrink-0"
+            />
+            <div className="flex-1 min-w-0">
+              <p className="truncate">{highlightMatch(course.title, q)}</p>
+              <p className="text-xs text-content/50">
+                {course.price === 0
+                  ? "Miễn phí"
+                  : `${course.price.toLocaleString("vi-VN")}đ`}
+              </p>
+            </div>
           </button>
         ))}
       </div>
@@ -108,8 +142,12 @@ export default function SearchInput() {
           type="text"
           value={search}
           onChange={(e) => {
-            setSearch(e.target.value);
+            const value = e.target.value;
+            setSearch(value);
             setShowSuggestions(true);
+            if (!isListingPage && !isDetailPage && value.length === 1) {
+              router.push(`/courses`);
+            }
           }}
           onFocus={() => setShowSuggestions(true)}
           placeholder="Tìm khóa học..."

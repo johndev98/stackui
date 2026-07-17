@@ -82,9 +82,12 @@ export default async function CourseSlugPage({ params }: Props) {
           </div>
 
           {/* Button */}
-          <button className="md:w-auto py-3 px-6 rounded-lg bg-primary text-black font-bold text-center hover:opacity-90 transition-opacity">
+          <Link
+            href={`/learn?course=${course.slug}`}
+            className="md:w-auto py-3 px-6 rounded-lg bg-primary text-black font-bold text-center hover:opacity-90 transition-opacity inline-block"
+          >
             Bắt đầu học
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -115,7 +118,7 @@ export default async function CourseSlugPage({ params }: Props) {
 
           {/* MDX Content */}
           <div className="border-t border-white/10 pt-6">
-            <BaiHocPage slug={slug} />
+            <BaiHocPage courseSlug={slug} />
           </div>
         </div>
 
@@ -168,9 +171,12 @@ export default async function CourseSlugPage({ params }: Props) {
             </div>
 
             {/* Button */}
-            <button className="w-full py-3 rounded-lg bg-primary text-black font-bold text-center hover:opacity-90 transition-opacity">
+            <Link
+              href={`/learn?course=${course.slug}`}
+              className="w-full py-3 rounded-lg bg-primary text-black font-bold text-center hover:opacity-90 transition-opacity block text-center"
+            >
               Bắt đầu học
-            </button>
+            </Link>
             <hr className="border-white/10" />
           </div>
         </div>
@@ -183,7 +189,7 @@ export default async function CourseSlugPage({ params }: Props) {
 
       {/* ===== MDX Content — mobile/tablet only, LUÔN CUỐI ===== */}
       <div className="lg:hidden border-t border-white/10 pt-6 mt-6">
-        <BaiHocPage slug={slug} />
+        <BaiHocPage courseSlug={slug} />
       </div>
     </div>
   );

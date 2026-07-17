@@ -5,7 +5,9 @@ export function getLessonsByCourseId(courseId: string): Lesson[] {
     .filter((l) => l.courseId === courseId)
     .sort((a, b) => a.order - b.order);
 }
-
+export function getLessonBySlug(slug: string): Lesson | undefined {
+  return fakeLessons.find((l) => l.slug === slug);
+}
 export const fakeLessons: Lesson[] = [
   // course1 - TypeScript cơ bản
   {

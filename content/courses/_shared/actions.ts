@@ -18,7 +18,7 @@ function chuanHoaBoDau(str: string) {
 }
 
 export async function kiemTraDapAn(slug: string, cauTraLoi: string) {
-  const duongDan = process.cwd() + `/content/courses/${slug}.mdx`;
+  const duongDan = process.cwd() + `/content/courses/${slug}/_index.mdx`;
   const file = await readFile(duongDan, "utf8");
   const { data } = matter(file);
 

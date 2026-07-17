@@ -3,6 +3,9 @@ import type { CourseCardProps } from "@/types/course";
 export function getCourseBySlug(slug: string) {
   return fakeCourses.find((c) => c.slug === slug);
 }
+export function getCourseById(courseId: string) {
+  return fakeCourses.find((c) => c.id === courseId);
+}
 export const fakeCourses: CourseCardProps[] = [
   {
     id: "course1",

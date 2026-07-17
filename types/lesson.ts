@@ -4,4 +4,6 @@ export type Lesson = {
   title: string;
   slug: string;
   order: number;
+  duration?: string; // ← THÊM
+  isFree?: boolean; // ← THÊM
 };

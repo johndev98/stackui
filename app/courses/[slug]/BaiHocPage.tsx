@@ -4,15 +4,16 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkFrontmatter from "remark-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
 import { useMDXComponents } from "@/mdx-components";
-import { FillBlankQuiz } from "@/content/courses/ClientQuiz";
+import { FillBlankQuiz } from "@/content/courses/_shared/ClientQuiz";
 
-type Props = { slug: string };
+type Props = { courseSlug: string; lessonSlug?: string };
 
-export async function BaiHocPage({ slug }: Props) {
+export async function BaiHocPage({ courseSlug, lessonSlug }: Props) {
   let content: string;
   try {
+    const fileName = lessonSlug ?? "_index";
     const file = await readFile(
-      `${process.cwd()}/content/courses/${slug}.mdx`,
+      `${process.cwd()}/content/courses/${courseSlug}/${fileName}.mdx`,
       "utf8",
     );
     const parsed = matter(file);
