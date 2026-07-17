@@ -121,7 +121,7 @@ export default async function CourseSlugPage({ params }: Props) {
 
         {/* RIGHT — 1/4 sidebar (sticky) */}
         <div className="lg:w-70 shrink-0">
-          <div className="lg:sticky lg:top-24 rounded-xl border border-white/10 bg-white/5 p-6 space-y-5">
+          <div className="lg:sticky lg:top-20 rounded-xl border border-white/10 bg-white/5 p-6 space-y-5">
             {/* Price */}
             <div className="space-y-1">
               <span className="text-3xl font-bold text-primary">
