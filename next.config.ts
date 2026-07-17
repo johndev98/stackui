@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
-import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  // ✅ Bỏ .md/.mdx khỏi pageExtensions - không dùng @next/mdx nữa
+  pageExtensions: ["js", "jsx", "ts", "tsx"],
+  productionBrowserSourceMaps: false, // Giữ tắt source map
   images: {
     remotePatterns: [
       {
@@ -14,22 +15,15 @@ const nextConfig: NextConfig = {
     ],
   },
   allowedDevOrigins: ["192.168.1.9"],
+  // ✅ Next 16 dùng turbopack (không còn experimental.turbo nữa)
+  turbopack: {
+    rules: {
+      // ✅ Bảo Turbopack: nếu có ai tình cờ import .md/.mdx -> coi là text thôi, đừng báo lỗi
+      "*.md": { as: "*.txt" },
+      "*.mdx": { as: "*.txt" },
+    },
+  },
 };
 
-const withMDX = createMDX({
-  options: {
-    rehypePlugins: [
-      [
-        "rehype-pretty-code",
-        {
-          theme: "tokyo-night",
-          keepBackground: true,
-        },
-      ],
-    ],
-  },
-});
-
 const withNextIntl = createNextIntlPlugin();
-
-export default withNextIntl(withMDX(nextConfig));
+export default withNextIntl(nextConfig);

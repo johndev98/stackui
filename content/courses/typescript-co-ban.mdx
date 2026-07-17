@@ -1,150 +1,19 @@
-import Counter from "@/components/demos/Counter";
-
-# TypeScript là gì? Tại sao lập trình viên hiện đại nên học TypeScript?
-
-## Giới thiệu
-
-TypeScript là một ngôn ngữ lập trình mã nguồn mở được phát triển bởi Microsoft. Đây là phiên bản mở rộng của JavaScript, bổ sung hệ thống kiểu dữ liệu (**Static Typing**) giúp lập trình viên phát hiện lỗi sớm ngay trong quá trình viết code.
-
-Nói đơn giản, mọi mã JavaScript đều là TypeScript hợp lệ, nhưng TypeScript cung cấp thêm nhiều tính năng giúp dự án dễ bảo trì, dễ mở rộng và ít lỗi hơn.
-
-Hiện nay, TypeScript đã trở thành tiêu chuẩn trong nhiều dự án React, Next.js, Angular và các ứng dụng web quy mô lớn.
-
+---
+title: "Bài kiểm tra đơn giản"
+# 👇 Đáp án đúng CHỈ SERVER đọc, không gửi về client
+dapAnDung: "tĩnh"
+choPhepKhongDau: false
+giaiThich: "TypeScript bổ sung hệ thống kiểm tra kiểu dữ liệu tĩnh, giúp phát hiện lỗi ngay khi viết code, trước khi chạy ứng dụng."
 ---
 
-## Vì sao TypeScript ra đời?
-
-JavaScript là ngôn ngữ linh hoạt và dễ học, nhưng khi dự án phát triển lớn hơn, việc quản lý dữ liệu và cấu trúc chương trình trở nên khó khăn.
-
-Ví dụ trong JavaScript:
-
-```js
-function getUser(user) {
-  return user.name.toUpperCase();
-}
-
-getUser(null);
-```
-
-<Note>Nội dung note</Note>
-
-Đoạn code trên sẽ gây lỗi khi chạy vì <Highlight color="green">null</Highlight> không có thuộc tính `name`.
-
-Với TypeScript:
+# {frontmatter.title}
 
 ```ts
-interface User {
-  name: string;
-}
-
-function getUser(user: User) {
-  return user.name.toUpperCase();
-}
+console.log("Hello");
 ```
 
-TypeScript sẽ cảnh báo lỗi ngay khi lập trình viên truyền dữ liệu không đúng kiểu, giúp phát hiện vấn đề trước khi ứng dụng được triển khai.
+## Câu hỏi điền ô trống:
 
----
+Điểm khác biệt cốt lõi của <Highlight>TypeScript</Highlight> so với JavaScript là bổ sung hệ thống **\_\_\_\_**.
 
-## Những lợi ích nổi bật của TypeScript
-
-### 1. Phát hiện lỗi sớm
-
-TypeScript kiểm tra kiểu dữ liệu ngay trong quá trình biên dịch, giúp giảm đáng kể các lỗi runtime.
-
-```ts
-let age: number = 20;
-
-// Lỗi
-age = "hai mươi";
-```
-
----
-
-### 2. Hỗ trợ IDE thông minh hơn
-
-Các trình soạn thảo như VS Code có thể:
-
-- Gợi ý thuộc tính
-- Tự động hoàn thành mã nguồn
-- Tìm kiếm và đổi tên biến an toàn
-- Hiển thị kiểu dữ liệu chính xác
-
-Điều này giúp tăng tốc độ phát triển ứng dụng.
-
----
-
-### 3. Dễ bảo trì dự án lớn
-
-Khi ứng dụng có hàng nghìn dòng code và nhiều lập trình viên cùng làm việc, việc biết chính xác dữ liệu nào đang được sử dụng sẽ giúp việc bảo trì dễ dàng hơn rất nhiều.
-
-Ví dụ:
-
-```tsx
-import { motion } from "motion/react";
-
-function Component() {
-  return <motion.button animate={{ opacity: 1 }} />;
-}
-import { motion } from "motion/react";
-
-function Component() {
-  return <motion.button animate={{ opacity: 1 }} />;
-}
-import { motion } from "motion/react";
-
-function Component() {
-  return <motion.button animate={{ opacity: 1 }} />;
-}
-import { motion } from "motion/react";
-
-function Component() {
-  return <motion.button animate={{ opacity: 1 }} />;
-}
-import { motion } from "motion/react";
-
-function Component() {
-  return <motion.button animate={{ opacity: 1 }} />;
-}
-import { motion } from "motion/react";
-
-function Component() {
-  return <motion.button animate={{ opacity: 1 }} />;
-}
-import { motion } from "motion/react";
-
-function Component() {
-  return <motion.button animate={{ opacity: 1 }} />;
-}
-```
-
-Chỉ cần nhìn vào `interface`, mọi người đều hiểu cấu trúc dữ liệu của khóa học.
-
-Đây là ví dụ useState counter:
-```tsx
-"use client";
-import { useState } from "react";
-
-export default function Counter() {
-  const [count, setCount] = useState(0);
-  return (
-    <div className="flex items-center gap-4">
-      <button
-        onClick={() => setCount((c) => c - 1)}
-        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-      >
-        -
-      </button>
-      <span className="text-2xl font-bold">{count}</span>
-      <button
-        onClick={() => setCount((c) => c + 1)}
-        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-      >
-        +
-      </button>
-    </div>
-  );
-}
-
-```
-<LivePreview component={Counter} />
+<FillBlankQuiz />

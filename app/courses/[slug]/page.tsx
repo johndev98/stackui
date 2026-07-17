@@ -1,25 +1,14 @@
 import { notFound } from "next/navigation";
 import { getCourseBySlug } from "@/data/fakeCourses";
 import Image from "next/image";
-import { useMDXComponents } from "@/mdx-components";
+import { BaiHocPage } from "./BaiHocPage";
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+type Props = { params: Promise<{ slug: string }> };
 
 export default async function CourseSlugPage({ params }: Props) {
   const { slug } = await params;
   const course = getCourseBySlug(slug);
-  if (!course) notFound(); // ← TRƯỚC khi import MDX
-
-  // Chỉ import 1 lần
-  let MdxContent = null;
-  try {
-    const mod = await import(`@/content/courses/${slug}.mdx`);
-    MdxContent = mod.default;
-  } catch {
-    // MDX file not found — fallback to description
-  }
+  if (!course) notFound();
 
   const discount =
     course.oldPrice > 0
@@ -81,13 +70,9 @@ export default async function CourseSlugPage({ params }: Props) {
         ))}
       </div>
 
-      {/* MDX Content hoặc fallback */}
+      {/* ✅ CHỈ DÙNG BaiHocPage - đọc/render MDX bằng fs + next-mdx-remote */}
       <div className="border-t border-white/10 pt-6">
-        {MdxContent ? (
-          <MdxContent components={useMDXComponents()} />
-        ) : (
-          <p className="text-content">Nội dung chi tiết đang được cập nhật.</p>
-        )}
+        <BaiHocPage slug={slug} />
       </div>
     </div>
   );
