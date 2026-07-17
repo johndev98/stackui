@@ -5,6 +5,7 @@ import { BaiHocPage } from "./BaiHocPage";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getLessonsByCourseId } from "@/data/fakeLessons";
+import { LessonList } from "@/components/courses/LessonList";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -90,7 +91,7 @@ export default async function CourseSlugPage({ params }: Props) {
       {/* ===== DESKTOP: Layout 3:1 ===== */}
       <div className="hidden lg:flex gap-8">
         {/* LEFT — 3/4 content */}
-        <div className="flex-[3] min-w-0 space-y-6">
+        <div className="flex-3 min-w-0 space-y-6">
           {/* Thumbnail */}
           <div className="relative h-72 w-full rounded-xl overflow-hidden">
             <Image
@@ -106,33 +107,12 @@ export default async function CourseSlugPage({ params }: Props) {
 
           {/* Description */}
           <p className="text-content text-lg">{course.description}</p>
-          {/* ★ LESSONS LIST — desktop only */}
+
+          {/* ★ LESSONS LIST — desktop */}
           <div className="border-t border-white/10 pt-6">
-            <h3 className="text-heading font-semibold text-lg mb-3">
-              {lessons.length} bài học
-            </h3>
-            <ul className="space-y-2">
-              {lessons.map((lesson) => (
-                <li
-                  key={lesson.id}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5 text-content text-sm"
-                >
-                  <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded bg-white/10 text-xs text-content/70">
-                    {lesson.order}
-                  </span>
-                  <span className="flex-1">{lesson.title}</span>
-                  {lesson.isFree && (
-                    <span className="text-xs text-green-400">Free</span>
-                  )}
-                  {lesson.duration && (
-                    <span className="text-xs text-content/50">
-                      {lesson.duration}
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <LessonList lessons={lessons} initialCount={4} />
           </div>
+
           {/* MDX Content */}
           <div className="border-t border-white/10 pt-6">
             <BaiHocPage slug={slug} />
@@ -140,7 +120,7 @@ export default async function CourseSlugPage({ params }: Props) {
         </div>
 
         {/* RIGHT — 1/4 sidebar (sticky) */}
-        <div className="lg:w-[280px] flex-shrink-0">
+        <div className="lg:w-70 shrink-0">
           <div className="lg:sticky lg:top-24 rounded-xl border border-white/10 bg-white/5 p-6 space-y-5">
             {/* Price */}
             <div className="space-y-1">
@@ -195,32 +175,10 @@ export default async function CourseSlugPage({ params }: Props) {
           </div>
         </div>
       </div>
-      {/* ===== LESSONS LIST — mobile/tablet only ===== */}
+
+      {/* ===== LESSONS LIST — mobile/tablet ===== */}
       <div className="lg:hidden border-t border-white/10 pt-6 mt-6">
-        <h3 className="text-heading font-semibold text-lg mb-3">
-          {lessons.length} bài học
-        </h3>
-        <ul className="space-y-2">
-          {lessons.map((lesson) => (
-            <li
-              key={lesson.id}
-              className="flex items-center gap-3 p-3 rounded-lg bg-white/5 text-content text-sm"
-            >
-              <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded bg-white/10 text-xs text-content/70">
-                {lesson.order}
-              </span>
-              <span className="flex-1">{lesson.title}</span>
-              {lesson.isFree && (
-                <span className="text-xs text-green-400">Free</span>
-              )}
-              {lesson.duration && (
-                <span className="text-xs text-content/50">
-                  {lesson.duration}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
+        <LessonList lessons={lessons} initialCount={3} />
       </div>
 
       {/* ===== MDX Content — mobile/tablet only, LUÔN CUỐI ===== */}

@@ -1,6 +1,5 @@
 import { Lesson } from "@/types/lesson";
 
-
 export function getLessonsByCourseId(courseId: string): Lesson[] {
   return fakeLessons
     .filter((l) => l.courseId === courseId)
@@ -15,8 +14,6 @@ export const fakeLessons: Lesson[] = [
     title: "Giới thiệu TypeScript",
     slug: "gioi-thieu-typescript",
     order: 1,
-    duration: "12:30",
-    isFree: true,
   },
   {
     id: "l1-2",
@@ -24,7 +21,6 @@ export const fakeLessons: Lesson[] = [
     title: "Types & Variables",
     slug: "types-variables",
     order: 2,
-    duration: "18:45",
   },
   {
     id: "l1-3",
@@ -32,7 +28,6 @@ export const fakeLessons: Lesson[] = [
     title: "Functions & Parameters",
     slug: "functions-parameters",
     order: 3,
-    duration: "15:20",
   },
   {
     id: "l1-4",
@@ -40,7 +35,6 @@ export const fakeLessons: Lesson[] = [
     title: "Interface & Type Alias",
     slug: "interface-type-alias",
     order: 4,
-    duration: "22:10",
   },
   {
     id: "l1-5",
@@ -48,7 +42,6 @@ export const fakeLessons: Lesson[] = [
     title: "Generics cơ bản",
     slug: "generics-co-ban",
     order: 5,
-    duration: "20:00",
   },
   {
     id: "l1-6",
@@ -56,7 +49,6 @@ export const fakeLessons: Lesson[] = [
     title: "Async/Await với TypeScript",
     slug: "async-await-typescript",
     order: 6,
-    duration: "16:30",
   },
 
   // course2 - ReactJS từ Zero đến Hero
@@ -66,8 +58,6 @@ export const fakeLessons: Lesson[] = [
     title: "JSX & Components",
     slug: "jsx-components",
     order: 1,
-    duration: "14:00",
-    isFree: true,
   },
   {
     id: "l2-2",
@@ -75,7 +65,6 @@ export const fakeLessons: Lesson[] = [
     title: "Props & State",
     slug: "props-state",
     order: 2,
-    duration: "18:30",
   },
   {
     id: "l2-3",
@@ -83,7 +72,6 @@ export const fakeLessons: Lesson[] = [
     title: "Hooks cơ bản",
     slug: "hooks-co-ban",
     order: 3,
-    duration: "20:15",
   },
   {
     id: "l2-4",
@@ -91,7 +79,6 @@ export const fakeLessons: Lesson[] = [
     title: "useEffect & Side Effects",
     slug: "useeffect-side-effects",
     order: 4,
-    duration: "22:00",
   },
   {
     id: "l2-5",
@@ -99,7 +86,6 @@ export const fakeLessons: Lesson[] = [
     title: "Context API",
     slug: "context-api",
     order: 5,
-    duration: "17:45",
   },
   {
     id: "l2-6",
@@ -107,7 +93,6 @@ export const fakeLessons: Lesson[] = [
     title: "React Router",
     slug: "react-router",
     order: 6,
-    duration: "19:30",
   },
   {
     id: "l2-7",
@@ -115,7 +100,6 @@ export const fakeLessons: Lesson[] = [
     title: "Practice: Todo App",
     slug: "practice-todo-app",
     order: 7,
-    duration: "35:00",
   },
 
   // course3 - Nextjs Fullstack
@@ -125,8 +109,6 @@ export const fakeLessons: Lesson[] = [
     title: "Giới thiệu Next.js App Router",
     slug: "gioi-thieu-nextjs-app-router",
     order: 1,
-    duration: "10:20",
-    isFree: true,
   },
   {
     id: "l3-2",
@@ -134,7 +116,6 @@ export const fakeLessons: Lesson[] = [
     title: "File-based Routing",
     slug: "file-based-routing",
     order: 2,
-    duration: "16:40",
   },
   {
     id: "l3-3",
@@ -142,7 +123,6 @@ export const fakeLessons: Lesson[] = [
     title: "Server Components vs Client",
     slug: "server-client-components",
     order: 3,
-    duration: "21:15",
   },
   {
     id: "l3-4",
@@ -150,7 +130,6 @@ export const fakeLessons: Lesson[] = [
     title: "Data Fetching",
     slug: "data-fetching",
     order: 4,
-    duration: "19:50",
   },
   {
     id: "l3-5",
@@ -158,7 +137,6 @@ export const fakeLessons: Lesson[] = [
     title: "API Routes & Server Actions",
     slug: "api-routes-server-actions",
     order: 5,
-    duration: "24:30",
   },
   {
     id: "l3-6",
@@ -166,7 +144,6 @@ export const fakeLessons: Lesson[] = [
     title: "Authentication",
     slug: "authentication",
     order: 6,
-    duration: "28:00",
   },
   {
     id: "l3-7",
@@ -174,7 +151,6 @@ export const fakeLessons: Lesson[] = [
     title: "Database với Prisma",
     slug: "database-prisma",
     order: 7,
-    duration: "32:10",
   },
   {
     id: "l3-8",
@@ -182,7 +158,6 @@ export const fakeLessons: Lesson[] = [
     title: "Deploy lên Vercel",
     slug: "deploy-vercel",
     order: 8,
-    duration: "12:00",
   },
 
   // course4 - JavaScript ES6+ Chuyên sâu
@@ -192,8 +167,6 @@ export const fakeLessons: Lesson[] = [
     title: "Arrow Functions & Destructuring",
     slug: "arrow-functions-destructuring",
     order: 1,
-    duration: "15:00",
-    isFree: true,
   },
   {
     id: "l4-2",
@@ -201,7 +174,6 @@ export const fakeLessons: Lesson[] = [
     title: "Spread Operator & Rest Parameters",
     slug: "spread-rest",
     order: 2,
-    duration: "13:30",
   },
   {
     id: "l4-3",
@@ -209,7 +181,6 @@ export const fakeLessons: Lesson[] = [
     title: "Template Literals & Array Methods",
     slug: "template-array-methods",
     order: 3,
-    duration: "18:20",
   },
   {
     id: "l4-4",
@@ -217,7 +188,6 @@ export const fakeLessons: Lesson[] = [
     title: "Promises & Async/Await",
     slug: "promises-async-await",
     order: 4,
-    duration: "22:45",
   },
   {
     id: "l4-5",
@@ -225,7 +195,6 @@ export const fakeLessons: Lesson[] = [
     title: "Modules (ESM)",
     slug: "modules-esm",
     order: 5,
-    duration: "11:10",
   },
   {
     id: "l4-6",
@@ -233,7 +202,6 @@ export const fakeLessons: Lesson[] = [
     title: "Design Patterns",
     slug: "design-patterns",
     order: 6,
-    duration: "26:00",
   },
 
   // course5 - Tailwind CSS Master
@@ -243,8 +211,6 @@ export const fakeLessons: Lesson[] = [
     title: "Cài đặt & Configuration",
     slug: "cai-dat-configuration",
     order: 1,
-    duration: "08:30",
-    isFree: true,
   },
   {
     id: "l5-2",
@@ -252,7 +218,6 @@ export const fakeLessons: Lesson[] = [
     title: "Utility-first Fundamentals",
     slug: "utility-first-fundamentals",
     order: 2,
-    duration: "16:00",
   },
   {
     id: "l5-3",
@@ -260,7 +225,6 @@ export const fakeLessons: Lesson[] = [
     title: "Responsive Design",
     slug: "responsive-design",
     order: 3,
-    duration: "19:45",
   },
   {
     id: "l5-4",
@@ -268,7 +232,6 @@ export const fakeLessons: Lesson[] = [
     title: "Custom Theme & Plugins",
     slug: "custom-theme-plugins",
     order: 4,
-    duration: "14:20",
   },
   {
     id: "l5-5",
@@ -276,7 +239,6 @@ export const fakeLessons: Lesson[] = [
     title: "Dark Mode",
     slug: "dark-mode",
     order: 5,
-    duration: "12:00",
   },
   {
     id: "l5-6",
@@ -284,7 +246,6 @@ export const fakeLessons: Lesson[] = [
     title: "Practice: Landing Page",
     slug: "practice-landing-page",
     order: 6,
-    duration: "40:00",
   },
 
   // course6 - NodeJS & Express API
@@ -294,8 +255,6 @@ export const fakeLessons: Lesson[] = [
     title: "Node.js Fundamentals",
     slug: "nodejs-fundamentals",
     order: 1,
-    duration: "14:00",
-    isFree: true,
   },
   {
     id: "l6-2",
@@ -303,7 +262,6 @@ export const fakeLessons: Lesson[] = [
     title: "Express Router & Middleware",
     slug: "express-router-middleware",
     order: 2,
-    duration: "18:30",
   },
   {
     id: "l6-3",
@@ -311,7 +269,6 @@ export const fakeLessons: Lesson[] = [
     title: "RESTful API Design",
     slug: "restful-api-design",
     order: 3,
-    duration: "16:45",
   },
   {
     id: "l6-4",
@@ -319,7 +276,6 @@ export const fakeLessons: Lesson[] = [
     title: "MongoDB với Mongoose",
     slug: "mongodb-mongoose",
     order: 4,
-    duration: "22:00",
   },
   {
     id: "l6-5",
@@ -327,7 +283,6 @@ export const fakeLessons: Lesson[] = [
     title: "Authentication & Authorization",
     slug: "authentication-authorization",
     order: 5,
-    duration: "25:30",
   },
   {
     id: "l6-6",
@@ -335,7 +290,6 @@ export const fakeLessons: Lesson[] = [
     title: "Error Handling & Validation",
     slug: "error-handling-validation",
     order: 6,
-    duration: "17:20",
   },
   {
     id: "l6-7",
@@ -343,7 +297,6 @@ export const fakeLessons: Lesson[] = [
     title: "Testing với Jest",
     slug: "testing-jest",
     order: 7,
-    duration: "20:00",
   },
 
   // course7 - Docker cho Developer
@@ -353,8 +306,6 @@ export const fakeLessons: Lesson[] = [
     title: "Docker là gì?",
     slug: "docker-la-gi",
     order: 1,
-    duration: "10:00",
-    isFree: true,
   },
   {
     id: "l7-2",
@@ -362,7 +313,6 @@ export const fakeLessons: Lesson[] = [
     title: "Dockerfile & Images",
     slug: "dockerfile-images",
     order: 2,
-    duration: "18:00",
   },
   {
     id: "l7-3",
@@ -370,7 +320,6 @@ export const fakeLessons: Lesson[] = [
     title: "Containers & Volumes",
     slug: "containers-volumes",
     order: 3,
-    duration: "15:30",
   },
   {
     id: "l7-4",
@@ -378,7 +327,6 @@ export const fakeLessons: Lesson[] = [
     title: "Docker Compose",
     slug: "docker-compose",
     order: 4,
-    duration: "22:45",
   },
   {
     id: "l7-5",
@@ -386,7 +334,6 @@ export const fakeLessons: Lesson[] = [
     title: "Docker Networking",
     slug: "docker-networking",
     order: 5,
-    duration: "14:00",
   },
   {
     id: "l7-6",
@@ -394,7 +341,6 @@ export const fakeLessons: Lesson[] = [
     title: "Deploy với Docker",
     slug: "deploy-docker",
     order: 6,
-    duration: "19:30",
   },
 
   // course8 - Git & GitHub Thực chiến
@@ -404,8 +350,6 @@ export const fakeLessons: Lesson[] = [
     title: "Git Basics",
     slug: "git-basics",
     order: 1,
-    duration: "12:00",
-    isFree: true,
   },
   {
     id: "l8-2",
@@ -413,7 +357,6 @@ export const fakeLessons: Lesson[] = [
     title: "Branching & Merging",
     slug: "branching-merging",
     order: 2,
-    duration: "16:30",
   },
   {
     id: "l8-3",
@@ -421,7 +364,6 @@ export const fakeLessons: Lesson[] = [
     title: "Git Flow Workflow",
     slug: "git-flow-workflow",
     order: 3,
-    duration: "14:45",
   },
   {
     id: "l8-4",
@@ -429,7 +371,6 @@ export const fakeLessons: Lesson[] = [
     title: "GitHub Collaboration",
     slug: "github-collaboration",
     order: 4,
-    duration: "18:00",
   },
   {
     id: "l8-5",
@@ -437,7 +378,6 @@ export const fakeLessons: Lesson[] = [
     title: "Pull Requests & Code Review",
     slug: "pull-requests-code-review",
     order: 5,
-    duration: "15:20",
   },
   {
     id: "l8-6",
@@ -445,6 +385,5 @@ export const fakeLessons: Lesson[] = [
     title: "GitHub Actions CI/CD",
     slug: "github-actions-cicd",
     order: 6,
-    duration: "22:00",
   },
 ];
