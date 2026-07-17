@@ -17,12 +17,26 @@ function chuanHoaBoDau(str: string) {
     .trim();
 }
 
-export async function kiemTraDapAn(slug: string, cauTraLoi: string) {
-  const duongDan = process.cwd() + `/content/courses/${slug}/_index.mdx`;
+export async function kiemTraDapAn(
+  courseSlug: string,
+  lessonSlug: string | null,
+  cauTraLoi: string,
+  quizId: string | null,
+) {
+  const fileName = lessonSlug ?? "_index";
+  const duongDan =
+    process.cwd() + `/content/courses/${courseSlug}/${fileName}.mdx`;
   const file = await readFile(duongDan, "utf8");
   const { data } = matter(file);
 
-  const dapAnDung = String(data.dapAnDung ?? "");
+  let dapAnDung = "";
+  if (quizId && data.quiz && typeof data.quiz === "object") {
+    // Format mới: quiz: { q1: "2", q2: "string" }
+    dapAnDung = String(data.quiz[quizId] ?? "");
+  } else {
+    // Format cũ: dapAnDung: "tĩnh" (backward compatible)
+    dapAnDung = String(data.dapAnDung ?? "");
+  }
   const choPhepKhongDau = Boolean(data.choPhepKhongDau ?? false); // Mặc định = nghiêm ngặt
 
   const dung = choPhepKhongDau

@@ -13,7 +13,7 @@ type LessonCardProps = {
 
 export function LessonCard({ lesson, course }: LessonCardProps) {
   return (
-    <Link href={`/learn/${lesson.slug}`}>
+    <Link href={`/learn/${course.slug}/${lesson.slug}`}>
       <motion.div
         whileHover={{ scale: 1.025, borderColor: "var(--primary)" }}
         transition={{ duration: 0.3 }}

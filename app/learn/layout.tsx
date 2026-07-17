@@ -5,5 +5,11 @@ export default function LearnLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="mx-auto w-full max-w-screen-2xl px-6">{children}</div>;
+  return (
+    <html lang="vi" className={fontClasses}>
+      <body data-page="learn" className="bg-page-bg min-h-screen">
+        <div className="mx-auto w-full max-w-screen-2xl px-6">{children}</div>
+      </body>
+    </html>
+  );
 }

@@ -83,7 +83,7 @@ export default async function CourseSlugPage({ params }: Props) {
 
           {/* Button */}
           <Link
-            href={`/learn?course=${course.slug}`}
+            href={`/learn/${course.slug}`}
             className="md:w-auto py-3 px-6 rounded-lg bg-primary text-black font-bold text-center hover:opacity-90 transition-opacity inline-block"
           >
             Bắt đầu học
@@ -172,7 +172,7 @@ export default async function CourseSlugPage({ params }: Props) {
 
             {/* Button */}
             <Link
-              href={`/learn?course=${course.slug}`}
+              href={`/learn/${course.slug}`}
               className="w-full py-3 rounded-lg bg-primary text-black font-bold text-center hover:opacity-90 transition-opacity block text-center"
             >
               Bắt đầu học

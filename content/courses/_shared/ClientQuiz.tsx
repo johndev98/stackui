@@ -5,8 +5,14 @@ import { kiemTraDapAn } from "@/content/courses/_shared/actions";
 
 type KetQua = { dung: boolean; thongBao: string };
 
-export function FillBlankQuiz() {
-  const { slug } = useParams<{ slug: string }>();
+export function FillBlankQuiz({ id }: { id?: string }) {
+  const params = useParams<{
+    slug?: string;
+    courseSlug?: string;
+    lessonSlug?: string;
+  }>();
+  const courseSlug = params.slug ?? params.courseSlug ?? "";
+  const lessonSlug = params.lessonSlug ?? null;
   const [giaTri, setGiaTri] = useState("");
   const [ketQua, setKetQua] = useState<KetQua | null>(null);
   const [dangGui, batDauGui] = useTransition();
@@ -16,7 +22,12 @@ export function FillBlankQuiz() {
     if (!giaTri.trim() || dangGui) return;
 
     batDauGui(async () => {
-      const res = await kiemTraDapAn(String(slug), giaTri);
+      const res = await kiemTraDapAn(
+        courseSlug,
+        lessonSlug,
+        giaTri,
+        id ?? null,
+      );
       setKetQua(res);
     });
   }
