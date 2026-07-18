@@ -1,6 +1,6 @@
 import { getCourseBySlug } from "@/data/fakeCourses";
-import { getLessonBySlug } from "@/data/fakeLessons";
-import { BaiHocPage } from "@/app/courses/[slug]/BaiHocPage";
+import { getLessonBySlug, getLessonsByCourseId } from "@/data/fakeLessons";
+import { LessonContent } from "@/components/learn/LessonContent";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -17,6 +17,13 @@ export default async function LessonPage({ params }: Props) {
   const lesson = getLessonBySlug(lessonSlug);
   if (!lesson) notFound();
 
+  const lessons = getLessonsByCourseId(course.id);
+  const currentIndex = lessons.findIndex((item) => item.slug === lesson.slug);
+  const nextLesson =
+    currentIndex >= 0 && currentIndex < lessons.length - 1
+      ? lessons[currentIndex + 1]
+      : undefined;
+
   return (
     <div className="py-8 max-w-4xl mx-auto">
       <Link
@@ -27,7 +34,16 @@ export default async function LessonPage({ params }: Props) {
         <span className="text-sm">Quay lại danh sách bài học</span>
       </Link>
       <h1 className="text-2xl font-bold mb-6">{lesson.title}</h1>
-      <BaiHocPage courseSlug={course.slug} lessonSlug={lesson.slug} />
+      <LessonContent
+        courseSlug={course.slug}
+        lessonSlug={lesson.slug}
+        currentLessonTitle={lesson.title}
+        nextLessonTitle={nextLesson?.title}
+        nextLessonHref={
+          nextLesson ? `/learn/${course.slug}/${nextLesson.slug}` : undefined
+        }
+        learnListHref={`/learn/${course.slug}`}
+      />
     </div>
   );
 }

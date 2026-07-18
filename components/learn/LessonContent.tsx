@@ -7,9 +7,23 @@ import { useMDXComponents } from "@/mdx-components";
 import { FillBlankQuiz } from "@/content/courses/_shared/ClientQuiz";
 import LessonSteps from "@/components/learn/LessonSteps";
 
-type Props = { courseSlug: string; lessonSlug?: string };
+type LessonContentProps = {
+  courseSlug: string;
+  lessonSlug?: string;
+  currentLessonTitle?: string;
+  nextLessonTitle?: string;
+  nextLessonHref?: string;
+  learnListHref?: string;
+};
 
-export async function BaiHocPage({ courseSlug, lessonSlug }: Props) {
+export async function LessonContent({
+  courseSlug,
+  lessonSlug,
+  currentLessonTitle,
+  nextLessonTitle,
+  nextLessonHref,
+  learnListHref,
+}: LessonContentProps) {
   let content: string;
   try {
     const fileName = lessonSlug ?? "_index";
@@ -43,7 +57,13 @@ export async function BaiHocPage({ courseSlug, lessonSlug }: Props) {
   return (
     <div className="space-y-4">
       {hasStepBlocks ? (
-        <LessonSteps>
+        <LessonSteps
+          currentLessonTitle={currentLessonTitle}
+          nextLessonTitle={nextLessonTitle}
+          nextLessonHref={nextLessonHref}
+          learnListHref={learnListHref}
+          hasStepBlocks={hasStepBlocks}
+        >
           {stepContents.map((stepSource, index) => (
             <MDXRemote
               key={index}

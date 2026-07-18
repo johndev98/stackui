@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getCourseBySlug } from "@/data/fakeCourses";
 import Image from "next/image";
-import { BaiHocPage } from "./BaiHocPage";
+import { LessonContent } from "@/components/learn/LessonContent";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getLessonsByCourseId } from "@/data/fakeLessons";
@@ -118,7 +118,7 @@ export default async function CourseSlugPage({ params }: Props) {
 
           {/* MDX Content */}
           <div className="border-t border-white/10 pt-6">
-            <BaiHocPage courseSlug={slug} />
+            <LessonContent courseSlug={slug} />
           </div>
         </div>
 
@@ -189,7 +189,7 @@ export default async function CourseSlugPage({ params }: Props) {
 
       {/* ===== MDX Content — mobile/tablet only, LUÔN CUỐI ===== */}
       <div className="lg:hidden border-t border-white/10 pt-6 mt-6">
-        <BaiHocPage courseSlug={slug} />
+        <LessonContent courseSlug={slug} />
       </div>
     </div>
   );
