@@ -5,6 +5,11 @@ import Counter from "./components/demos/Counter";
 
 export function useMDXComponents(): MDXComponents {
   return {
+    Step: ({ children }: { children: React.ReactNode }) => (
+      <section className="min-h-screen flex flex-col justify-between py-10">
+        {children}
+      </section>
+    ),
     h1: ({ children }) => (
       <h1 className="text-3xl font-bold text-heading mt-8 mb-4">{children}</h1>
     ),

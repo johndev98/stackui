@@ -5,6 +5,7 @@ import remarkFrontmatter from "remark-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
 import { useMDXComponents } from "@/mdx-components";
 import { FillBlankQuiz } from "@/content/courses/_shared/ClientQuiz";
+import LessonSteps from "@/components/learn/LessonSteps";
 
 type Props = { courseSlug: string; lessonSlug?: string };
 
@@ -31,23 +32,54 @@ export async function BaiHocPage({ courseSlug, lessonSlug }: Props) {
     FillBlankQuiz,
   };
 
+  const stepMatches = Array.from(
+    content.matchAll(/<Step(?:\s[^>]*)?>([\s\S]*?)<\/Step>/gi),
+  );
+  const hasStepBlocks = stepMatches.length > 0;
+  const stepContents = hasStepBlocks
+    ? stepMatches.map((match) => match[1].trim())
+    : [content];
+
   return (
     <div className="space-y-4">
-      <MDXRemote
-        source={content}
-        options={{
-          mdxOptions: {
-            remarkPlugins: [remarkFrontmatter],
-            rehypePlugins: [
-              [
-                rehypePrettyCode,
-                { theme: "tokyo-night", keepBackground: true },
+      {hasStepBlocks ? (
+        <LessonSteps>
+          {stepContents.map((stepSource, index) => (
+            <MDXRemote
+              key={index}
+              source={stepSource}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkFrontmatter],
+                  rehypePlugins: [
+                    [
+                      rehypePrettyCode,
+                      { theme: "tokyo-night", keepBackground: true },
+                    ],
+                  ],
+                },
+              }}
+              components={tatCaComponents}
+            />
+          ))}
+        </LessonSteps>
+      ) : (
+        <MDXRemote
+          source={content}
+          options={{
+            mdxOptions: {
+              remarkPlugins: [remarkFrontmatter],
+              rehypePlugins: [
+                [
+                  rehypePrettyCode,
+                  { theme: "tokyo-night", keepBackground: true },
+                ],
               ],
-            ],
-          },
-        }}
-        components={tatCaComponents}
-      />
+            },
+          }}
+          components={tatCaComponents}
+        />
+      )}
     </div>
   );
 }
