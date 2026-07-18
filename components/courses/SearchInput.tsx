@@ -63,16 +63,25 @@ export default function SearchInput() {
   // Click outside → ẩn dropdown + collapse mobile
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setShowSuggestions(false);
-        setExpanded(false);
+      try {
+        const target = e.target as Node;
+        if (
+          containerRef.current &&
+          target &&
+          !containerRef.current.contains(target)
+        ) {
+          setShowSuggestions(false);
+          setExpanded(false);
+        }
+      } catch (error) {
+        console.error("Error handling click outside:", error);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const SuggestionsDropdown = ({ className = "" }: { className?: string }) =>

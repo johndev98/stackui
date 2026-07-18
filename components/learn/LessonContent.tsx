@@ -46,12 +46,55 @@ export async function LessonContent({
     FillBlankQuiz,
   };
 
-  const stepMatches = Array.from(
-    content.matchAll(/<Step(?:\s[^>]*)?>([\s\S]*?)<\/Step>/gi),
-  );
+  // Validate content size before regex to prevent catastrophic backtracking
+  const MAX_CONTENT_SIZE = 10 * 1024 * 1024; // 10MB limit
+  if (content.length > MAX_CONTENT_SIZE) {
+    return (
+      <div className="py-6 text-content text-center">
+        <p className="italic">
+          Nội dung quá lớn, không thể hiển thị. Vui lòng liên hệ quản trị viên.
+        </p>
+      </div>
+    );
+  }
+
+  let stepMatches: RegExpMatchArray[] = [];
+  try {
+    stepMatches = Array.from(
+      content.matchAll(/<Step(?:\s[^>]*)?>([\s\S]*?)<\/Step>/gi),
+    );
+  } catch (error) {
+    console.error("Error parsing step blocks:", error);
+    // Fallback: treat entire content as single step
+    return (
+      <div className="space-y-4">
+        <MDXRemote
+          source={content}
+          options={{
+            mdxOptions: {
+              remarkPlugins: [remarkFrontmatter],
+              rehypePlugins: [
+                [
+                  rehypePrettyCode,
+                  { theme: "tokyo-night", keepBackground: true },
+                ],
+              ],
+            },
+          }}
+          components={{
+            ...useMDXComponents(),
+            FillBlankQuiz,
+          }}
+        />
+      </div>
+    );
+  }
+
   const hasStepBlocks = stepMatches.length > 0;
   const stepContents = hasStepBlocks
-    ? stepMatches.map((match) => match[1].trim())
+    ? stepMatches
+        .map((match) => match[1]?.trim())
+        .filter((content): content is string => Boolean(content))
     : [content];
 
   return (

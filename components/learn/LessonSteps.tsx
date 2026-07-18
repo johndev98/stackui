@@ -25,40 +25,58 @@ export default function LessonSteps({
   const steps = useMemo(() => React.Children.toArray(children), [children]);
   const [activeStep, setActiveStep] = useState(0);
   const [showCompleteDialog, setShowCompleteDialog] = useState(false);
-  const lastIndex = steps.length - 1;
+  const [navigationError, setNavigationError] = useState<string | null>(null);
+  const lastIndex = Math.max(0, steps.length - 1);
 
   if (steps.length <= 1 && !hasStepBlocks) {
     return <div>{children}</div>;
   }
 
+  // Ensure activeStep is within bounds
+  const safeActiveStep = Math.min(activeStep, Math.max(0, steps.length - 1));
+  const currentStepContent = steps[safeActiveStep];
+
+  const handleNavigate = (href: string) => {
+    try {
+      if (!href || !href.trim()) {
+        setNavigationError("Đường dẫn không hợp lệ. Vui lòng thử lại.");
+        return;
+      }
+      router.push(href);
+    } catch (error) {
+      console.error("Navigation error:", error);
+      setNavigationError("Không thể điều hướng. Vui lòng thử lại.");
+    }
+  };
+
   return (
     <div className="relative min-h-screen">
-      <div className="h-screen overflow-hidden">{steps[activeStep]}</div>
+      <div className="h-screen overflow-hidden">{currentStepContent}</div>
 
       <div className="sticky bottom-0 left-0 right-0 border-t border-white/10 bg-page-bg/90 backdrop-blur-md py-4 px-6 flex items-center justify-between gap-4">
         <button
-          onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
-          disabled={activeStep === 0}
+          onClick={() => setActiveStep(Math.max(0, safeActiveStep - 1))}
+          disabled={safeActiveStep === 0}
           className="rounded-lg px-4 py-2 bg-white/5 text-sm"
         >
           Previous
         </button>
 
         <div className="text-sm text-content">
-          Step {activeStep + 1} / {steps.length}
+          Step {safeActiveStep + 1} / {steps.length}
         </div>
 
         <button
           onClick={() => {
-            if (activeStep === lastIndex) {
+            if (safeActiveStep === lastIndex) {
               setShowCompleteDialog(true);
             } else {
-              setActiveStep(Math.min(lastIndex, activeStep + 1));
+              setActiveStep(Math.min(lastIndex, safeActiveStep + 1));
             }
           }}
           className="rounded-lg px-4 py-2 bg-primary text-black text-sm"
         >
-          {activeStep === lastIndex ? "Hoàn tất" : "Next"}
+          {safeActiveStep === lastIndex ? "Hoàn tất" : "Next"}
         </button>
       </div>
 
@@ -75,11 +93,16 @@ export default function LessonSteps({
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+              {navigationError && (
+                <div className="w-full text-sm text-red-300 bg-red-500/10 border border-red-500/30 rounded-lg p-2 mb-2">
+                  {navigationError}
+                </div>
+              )}
               {nextLessonHref && (
                 <button
                   onClick={() => {
                     setShowCompleteDialog(false);
-                    router.push(nextLessonHref);
+                    handleNavigate(nextLessonHref);
                   }}
                   className="rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-black transition hover:opacity-90"
                 >
@@ -89,10 +112,16 @@ export default function LessonSteps({
               <button
                 onClick={() => {
                   setShowCompleteDialog(false);
-                  if (learnListHref) {
-                    router.push(learnListHref);
-                  } else {
-                    router.back();
+                  setNavigationError(null);
+                  try {
+                    if (learnListHref && learnListHref.trim()) {
+                      handleNavigate(learnListHref);
+                    } else {
+                      router.back();
+                    }
+                  } catch (error) {
+                    console.error("Navigation error:", error);
+                    setNavigationError("Không thể quay lại. Vui lòng thử lại.");
                   }
                 }}
                 className="rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-content transition hover:bg-white/10"

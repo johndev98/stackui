@@ -21,14 +21,32 @@ export function FillBlankQuiz({ id }: { id?: string }) {
     e.preventDefault();
     if (!giaTri.trim() || dangGui) return;
 
+    // Validate courseSlug before making request
+    if (!courseSlug || !courseSlug.trim()) {
+      setKetQua({
+        dung: false,
+        thongBao:
+          "❌ Lỗi: Không thể xác định khóa học. Vui lòng tải lại trang.",
+      });
+      return;
+    }
+
     batDauGui(async () => {
-      const res = await kiemTraDapAn(
-        courseSlug,
-        lessonSlug,
-        giaTri,
-        id ?? null,
-      );
-      setKetQua(res);
+      try {
+        const res = await kiemTraDapAn(
+          courseSlug,
+          lessonSlug,
+          giaTri,
+          id ?? null,
+        );
+        setKetQua(res);
+      } catch (error) {
+        console.error("Error submitting quiz:", error);
+        setKetQua({
+          dung: false,
+          thongBao: "❌ Lỗi khi gửi đáp án. Vui lòng thử lại.",
+        });
+      }
     });
   }
 

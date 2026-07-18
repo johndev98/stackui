@@ -15,10 +15,27 @@ export default async function CourseSlugPage({ params }: Props) {
   if (!course) notFound();
 
   const lessons = getLessonsByCourseId(course.id);
-  const discount =
-    course.oldPrice > 0
-      ? Math.round(((course.oldPrice - course.price) / course.oldPrice) * 100)
-      : 0;
+
+  // Validate oldPrice before division
+  let discount = 0;
+  try {
+    if (
+      typeof course.oldPrice === "number" &&
+      typeof course.price === "number" &&
+      course.oldPrice > 0 &&
+      !isNaN(course.oldPrice) &&
+      !isNaN(course.price)
+    ) {
+      discount = Math.round(
+        ((course.oldPrice - course.price) / course.oldPrice) * 100,
+      );
+      // Ensure discount is within valid range
+      discount = Math.max(0, Math.min(100, discount));
+    }
+  } catch (error) {
+    console.error("Error calculating discount:", error);
+    discount = 0;
+  }
   return (
     <div className="max-w-7xl mx-auto py-8 px-4">
       {/* ===== BACK BUTTON ===== */}

@@ -24,12 +24,20 @@ export default function CategoryDropdown({
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
+      try {
+        const target = e.target as Node;
+        if (ref.current && target && !ref.current.contains(target)) {
+          setOpen(false);
+        }
+      } catch (error) {
+        console.error("Error handling click:", error);
       }
     }
+
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
   }, []);
 
   return (
