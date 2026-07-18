@@ -28,7 +28,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-page-bg/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
         <Link href={`/${locale}`} className={navClass("/")}>
-          <span className="font-extrabold text-4xl text-primary">Cimimo</span>
+          <span className="font-extrabold text-4xl text-primary">Unezen</span>
         </Link>
 
         <nav className="flex items-center gap-10 text-sm font-medium">

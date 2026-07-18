@@ -68,7 +68,7 @@ export function FillBlankQuiz({ id }: { id?: string }) {
                 : "bg-red-500/10 border-red-500/30 text-red-300"
             }`}
           >
-            <p className="font-semibold">{ketQua.thongBao}</p>
+            <span className="font-semibold">{ketQua.thongBao}</span>
           </div>
         )}
       </div>

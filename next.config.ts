@@ -4,7 +4,6 @@ import createNextIntlPlugin from "next-intl/plugin";
 const nextConfig: NextConfig = {
   // ✅ Bỏ .md/.mdx khỏi pageExtensions - không dùng @next/mdx nữa
   pageExtensions: ["js", "jsx", "ts", "tsx"],
-  productionBrowserSourceMaps: false, // Giữ tắt source map
   images: {
     remotePatterns: [
       {

@@ -17,7 +17,7 @@ export function useMDXComponents(): MDXComponents {
       <h3 className="text-xl font-medium text-heading mt-5 mb-2">{children}</h3>
     ),
     p: ({ children }) => (
-      <p className="text-content leading-7 mb-4">{children}</p>
+      <span className="text-content leading-7 mb-4">{children}</span>
     ),
     ul: ({ children }) => (
       <ul className="list-disc list-inside text-content space-y-1 mb-4">

@@ -50,7 +50,7 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
                 transition={{ duration: 0.15 }}
                 className="font-extrabold text-3xl text-primary "
               >
-                Ci
+                U
               </motion.span>
             ) : (
               <motion.span
@@ -61,7 +61,7 @@ export default function Sidebar({ collapsed, onNavigate }: SidebarProps) {
                 transition={{ duration: 0.15 }}
                 className="font-extrabold text-3xl text-primary"
               >
-                Cimimo
+                Unezen
               </motion.span>
             )}
           </AnimatePresence>
