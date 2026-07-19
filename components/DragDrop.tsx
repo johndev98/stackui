@@ -44,21 +44,21 @@ export type DragDropProps = {
 };
 
 const TOKYO = {
-  cardBg: "#1a1b26",
-  surface: "#1e202e",
-  surfaceDark: "#16161e",
-  border: "#292e42",
-  borderMid: "#363b54",
-  text: "#a9b1d6",
-  subtitle: "#9aa5ce",
-  hover: "#7aa2f7",
-  correct: "#9ece6a",
-  blue: "#7aa2f7",
-  wrong: "#f7768e",
-  comment: "#565f89",
-  dotRed: "#f7768e",
-  dotYellow: "#e0af68",
-  dotGreen: "#9ece6a",
+  cardBg: "#0d1117",
+  surface: "#161b22",
+  surfaceDark: "#010409",
+  border: "#30363d",
+  borderMid: "#484f58",
+  text: "#c9d1d9",
+  subtitle: "#8b949e",
+  hover: "#58a6ff",
+  correct: "#3fb950",
+  blue: "#58a6ff",
+  wrong: "#f85149",
+  comment: "#484f58",
+  dotRed: "#f85149",
+  dotYellow: "#d29922",
+  dotGreen: "#3fb950",
 } as const;
 
 function SortableChip({
@@ -159,7 +159,6 @@ function DropSlot({
   onClick: () => void;
   mode?: "text" | "code";
 }) {
-
   const {
     setNodeRef,
     attributes,
@@ -169,7 +168,7 @@ function DropSlot({
     isDragging,
   } = useSortable({
     id: blank.id,
-    disabled: !filledLabel, 
+    disabled: !filledLabel,
   });
   const isCode = mode === "code";
 
@@ -309,7 +308,7 @@ export default function DragDrop({
     setIsMounted(true);
     import("shiki").then(async ({ createHighlighter }) => {
       const h = await createHighlighter({
-        themes: ["tokyo-night"],
+        themes: ["github-dark-default"],
         langs: [
           "ts",
           "tsx",
@@ -428,7 +427,7 @@ export default function DragDrop({
 
     const { tokens } = shiki.codeToTokens(codeStr, {
       lang: language,
-      theme: "tokyo-night",
+      theme: "github-dark-default",
     });
 
     let bc = 0;
@@ -505,6 +504,47 @@ export default function DragDrop({
     closestTargetId,
     result,
   ]);
+
+  /* ---------- CODE HOÀN CHỈNH KHI TRẢ LỜI ĐÚNG ---------- */
+  const completedCode = useMemo(() => {
+    if (!isCode || !isMounted || !shiki || !result?.isCorrect) return null;
+
+    let codeStr = "";
+    question.forEach((s) => {
+      if (s.type === "text") {
+        codeStr += s.content;
+      } else {
+        codeStr += answers[s.id] ? labelOf[answers[s.id]] : "";
+      }
+    });
+
+    const { tokens } = shiki.codeToTokens(codeStr, {
+      lang: language,
+      theme: "github-dark-default",
+    });
+
+    const out: React.ReactNode[] = [];
+    let gk = 0;
+    tokens.forEach((line, li) => {
+      line.forEach((tok) => {
+        out.push(
+          <span
+            key={`c-${gk++}`}
+            style={{
+              color: tok.color || TOKYO.text,
+              fontStyle: (tok as any).fontStyle === 1 ? "italic" : "normal",
+              fontWeight: (tok as any).fontWeight ?? 400,
+            }}
+          >
+            {tok.content}
+          </span>,
+        );
+      });
+      if (li < tokens.length - 1)
+        out.push(<span key={`cn-${li}`}>{"\n"}</span>);
+    });
+    return out;
+  }, [isCode, isMounted, shiki, result, question, language, answers, labelOf]);
 
   /* ---------- 🎯 LOGIC KÉO THẢ + HOÁN ĐỔI Ô TRỐNG ---------- */
   const removeAnswer = (id: string) => {
@@ -623,25 +663,27 @@ export default function DragDrop({
           }}
           suppressHydrationWarning
         >
-          {isMounted && shiki && renderedCode
-            ? renderedCode
-            : question.map((seg, i) =>
-                seg.type === "text" ? (
-                  <span key={i}>{seg.content}</span>
-                ) : (
-                  <DropSlot
-                    key={seg.id}
-                    blank={seg}
-                    mode="code"
-                    filledLabel={
-                      answers[seg.id] ? labelOf[answers[seg.id]] : undefined
-                    }
-                    isActiveTarget={closestTargetId === seg.id}
-                    state={result?.slotStates[seg.id] ?? "idle"}
-                    onClick={() => removeAnswer(seg.id)}
-                  />
-                ),
-              )}
+          {result?.isCorrect && completedCode
+            ? completedCode
+            : isMounted && shiki && renderedCode
+              ? renderedCode
+              : question.map((seg, i) =>
+                  seg.type === "text" ? (
+                    <span key={i}>{seg.content}</span>
+                  ) : (
+                    <DropSlot
+                      key={seg.id}
+                      blank={seg}
+                      mode="code"
+                      filledLabel={
+                        answers[seg.id] ? labelOf[answers[seg.id]] : undefined
+                      }
+                      isActiveTarget={closestTargetId === seg.id}
+                      state={result?.slotStates[seg.id] ?? "idle"}
+                      onClick={() => removeAnswer(seg.id)}
+                    />
+                  ),
+                )}
         </motion.div>
       );
     }
@@ -740,49 +782,53 @@ export default function DragDrop({
           </div>
         </SortableContext>
 
-        <SortableContext
-          items={options.map((o) => o.id)}
-          strategy={horizontalListSortingStrategy}
-        >
-          <div
-            className="flex flex-wrap gap-2.5 p-3 rounded-2xl min-h-15 mb-5 border"
-            style={
-              isCode
-                ? {
-                    backgroundColor: TOKYO.surfaceDark,
-                    borderColor: TOKYO.border,
-                  }
-                : { backgroundColor: "#eff6ff", borderColor: "transparent" }
-            }
+        {!(result?.isCorrect && isCode) && (
+          <SortableContext
+            items={options.map((o) => o.id)}
+            strategy={horizontalListSortingStrategy}
           >
-            {options.map((o) => (
-              <SortableChip
-                key={o.id}
-                id={o.id}
-                label={o.label}
-                used={usedIds.includes(o.id)}
-                accent={finalAccent}
-                mode={mode}
-                onClick={() => handleChipClick(o.id)}
-              />
-            ))}
-          </div>
-        </SortableContext>
+            <div
+              className="flex flex-wrap gap-2.5 p-3 rounded-2xl min-h-15 mb-5 border"
+              style={
+                isCode
+                  ? {
+                      backgroundColor: TOKYO.surfaceDark,
+                      borderColor: TOKYO.border,
+                    }
+                  : { backgroundColor: "#eff6ff", borderColor: "transparent" }
+              }
+            >
+              {options.map((o) => (
+                <SortableChip
+                  key={o.id}
+                  id={o.id}
+                  label={o.label}
+                  used={usedIds.includes(o.id)}
+                  accent={finalAccent}
+                  mode={mode}
+                  onClick={() => handleChipClick(o.id)}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        )}
 
         <div className="flex gap-3 flex-wrap">
-          <motion.button
-            whileHover={{ scale: allFilled && !loading ? 1.03 : 1 }}
-            whileTap={{ scale: allFilled && !loading ? 0.96 : 1 }}
-            onClick={handleCheck}
-            disabled={!allFilled || loading}
-            className="flex-1 min-w-40 py-3 rounded-2xl font-bold text-white text-lg border-b-4 active:border-b-0 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
-            style={{
-              backgroundColor: finalAccent,
-              borderColor: colorDarken(finalAccent, 25),
-            }}
-          >
-            {loading ? "⏳ Đang kiểm tra..." : "KIỂM TRA"}
-          </motion.button>
+          {!(result?.isCorrect && isCode) && (
+            <motion.button
+              whileHover={{ scale: allFilled && !loading ? 1.03 : 1 }}
+              whileTap={{ scale: allFilled && !loading ? 0.96 : 1 }}
+              onClick={handleCheck}
+              disabled={!allFilled || loading}
+              className="flex-1 min-w-40 py-3 rounded-2xl font-bold text-white text-lg border-b-4 active:border-b-0 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+              style={{
+                backgroundColor: finalAccent,
+                borderColor: colorDarken(finalAccent, 25),
+              }}
+            >
+              {loading ? "⏳ Đang kiểm tra..." : "KIỂM TRA"}
+            </motion.button>
+          )}
           <button
             onClick={reset}
             className="px-5 py-3 rounded-2xl font-bold border-b-4 active:border-b-0 transition-all"
