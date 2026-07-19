@@ -2,8 +2,8 @@
 
 import { useMemo, useCallback } from "react";
 import { useParams } from "next/navigation";
-import DuolingoDragDrop from "@/components/DuolingoDragDrop";
-import type { BlankSegment, AnswerOption } from "@/components/DuolingoDragDrop";
+import DuolingoDragDrop from "@/components/DragDrop";
+import type { BlankSegment, AnswerOption } from "@/components/DragDrop";
 import { kiemTraDragDropQuiz } from "@/content/courses/_shared/actions";
 
 type DragDropQuizProps = {
@@ -130,7 +130,9 @@ export function DragDropQuiz({
         return {
           isCorrect: res.isCorrect,
           explanation: res.thongBao,
-          slotStates: res.slotStates as Record<string, "idle" | "correct" | "wrong"> | undefined,
+          slotStates: res.slotStates as
+            | Record<string, "idle" | "correct" | "wrong">
+            | undefined,
         };
       } catch {
         return { isCorrect: false, explanation: "Lỗi khi kiểm tra. Thử lại." };

@@ -30,7 +30,7 @@ export type BlankSegment =
   | { type: "text"; content: string }
   | { type: "blank"; id: string; hint?: string };
 export type AnswerOption = { id: string; label: string };
-export type DuolingoDragDropProps = {
+export type DragDropProps = {
   question: BlankSegment[];
   options: AnswerOption[];
   correctAnswers?: Record<string, string>;
@@ -262,7 +262,7 @@ function DropSlot({
             ? `0 0 0 3px ${isCode ? TOKYO.hover : "#1cb0f6"}44, 0 6px 20px ${isCode ? TOKYO.hover : "#1cb0f6"}33`
             : "0 0 0 transparent",
       }}
-      className={`inline-flex items-center justify-center mx-0.5 rounded-md border-b-[2px] font-semibold transition-all align-middle outline-none
+      className={`inline-flex items-center justify-center mx-0.5 rounded-md border-b-2 font-semibold transition-all align-middle outline-none
         ${filledLabel ? "cursor-grab active:cursor-grabbing hover:brightness-110 focus-visible:ring-2" : ""} 
         ${isCode ? "font-mono text-sm" : "text-base"}`}
       // ✅ Áp dụng transform + style khi kéo để ô di chuyển theo con trỏ
@@ -302,7 +302,7 @@ function DropSlot({
 /* =========================================================
    🏆 COMPONENT CHÍNH
    ========================================================= */
-export default function DuolingoDragDrop({
+export default function DragDrop({
   question,
   options,
   correctAnswers,
@@ -310,7 +310,7 @@ export default function DuolingoDragDrop({
   mode = "text",
   language = "ts",
   onCheck,
-}: DuolingoDragDropProps) {
+}: DragDropProps) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [activeId, setActiveId] = useState<string | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
@@ -611,7 +611,9 @@ export default function DuolingoDragDrop({
         if (r.slotStates && Object.keys(r.slotStates).length > 0) {
           blankIds.forEach((id) => (st[id] = r.slotStates![id] ?? "idle"));
         } else {
-          blankIds.forEach((id) => (st[id] = r.isCorrect ? "correct" : "wrong"));
+          blankIds.forEach(
+            (id) => (st[id] = r.isCorrect ? "correct" : "wrong"),
+          );
         }
         setResult({ ...r, slotStates: st });
         if (!r.isCorrect) setShakeKey((k) => k + 1);
@@ -699,7 +701,7 @@ export default function DuolingoDragDrop({
       <motion.div
         key={shakeKey}
         {...mp}
-        className="text-xl md:text-2xl leading-[3rem] font-medium text-gray-800"
+        className="text-xl md:text-2xl leading-12 font-medium text-gray-800"
       >
         {question.map((seg, i) =>
           seg.type === "text" ? (
@@ -768,7 +770,7 @@ export default function DuolingoDragDrop({
             >
               .{language || "ts"}
             </span>
-            <span className="w-[52px]" />
+            <span className="w-13" />
           </div>
         )}
 
@@ -778,7 +780,7 @@ export default function DuolingoDragDrop({
         >
           <div
             ref={setQuestionDropRef}
-            className="mb-6 p-4 md:p-5 rounded-2xl min-h-[100px] border overflow-x-auto transition-colors"
+            className="mb-6 p-4 md:p-5 rounded-2xl min-h-25 border overflow-x-auto transition-colors"
             style={
               isCode
                 ? {
@@ -802,7 +804,7 @@ export default function DuolingoDragDrop({
           strategy={horizontalListSortingStrategy}
         >
           <div
-            className="flex flex-wrap gap-2.5 p-3 rounded-2xl min-h-[60px] mb-5 border"
+            className="flex flex-wrap gap-2.5 p-3 rounded-2xl min-h-15 mb-5 border"
             style={
               isCode
                 ? {
@@ -832,7 +834,7 @@ export default function DuolingoDragDrop({
             whileTap={{ scale: allFilled && !loading ? 0.96 : 1 }}
             onClick={handleCheck}
             disabled={!allFilled || loading}
-            className="flex-1 min-w-[160px] py-3 rounded-2xl font-bold text-white text-lg border-b-[4px] active:border-b-0 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+            className="flex-1 min-w-40 py-3 rounded-2xl font-bold text-white text-lg border-b-4 active:border-b-0 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
             style={{
               backgroundColor: finalAccent,
               borderColor: colorDarken(finalAccent, 25),
@@ -842,7 +844,7 @@ export default function DuolingoDragDrop({
           </motion.button>
           <button
             onClick={reset}
-            className="px-5 py-3 rounded-2xl font-bold border-b-[4px] active:border-b-0 transition-all"
+            className="px-5 py-3 rounded-2xl font-bold border-b-4 active:border-b-0 transition-all"
             style={
               isCode
                 ? {
@@ -875,7 +877,7 @@ export default function DuolingoDragDrop({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              className="mt-5 p-4 rounded-2xl border-b-[4px] font-semibold"
+              className="mt-5 p-4 rounded-2xl border-b-4 font-semibold"
               style={
                 isCode
                   ? result.isCorrect
