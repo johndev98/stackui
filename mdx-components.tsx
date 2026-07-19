@@ -1,7 +1,5 @@
 // mdx-components.tsx
 import type { MDXComponents } from "mdx/types";
-import LivePreview from "./components/LivePreview";
-import Counter from "./components/demos/Counter";
 
 export function useMDXComponents(): MDXComponents {
   return {
@@ -127,7 +125,5 @@ export function useMDXComponents(): MDXComponents {
         </span>
       );
     },
-    LivePreview,
-    Counter,
   };
 }
