@@ -21,6 +21,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion, AnimatePresence } from "motion/react";
+import { DuolingoButton } from "@/components/ui/DuolingoButton";
 import type { Highlighter, ThemedToken, BundledLanguage } from "shiki";
 
 /* =========================================================
@@ -256,9 +257,9 @@ function DropSlot({
         transition,
         opacity: isDragging ? 0.4 : 1,
         zIndex: isDragging ? 9999 : "auto",
-        minWidth: filledLabel ? "auto" : isCode ? "68px" : "76px",
-        height: isCode ? "30px" : "42px",
-        padding: isCode ? "0 10px" : "0 14px",
+        minWidth: filledLabel ? "auto" : isCode ? "56px" : "76px",
+        height: isCode ? "26px" : "32px",
+        padding: isCode ? "0 8px" : "0 14px",
         borderWidth: isActiveTarget ? "3px" : "2px",
         borderColor: palette.border[state === "idle" ? "idle" : state],
         borderStyle: filledLabel ? "solid" : "dashed",
@@ -277,7 +278,7 @@ function DropSlot({
           className={isCode ? "text-xs" : "text-sm"}
           style={{ color: isCode ? TOKYO.subtitle : undefined, opacity: 0.75 }}
         >
-          {blank.hint || "…"}
+          {blank.hint || ""}
         </span>
       )}
     </motion.span>
@@ -655,11 +656,10 @@ export default function DragDrop({
         <motion.div
           key={shakeKey}
           {...mp}
-          className="font-mono text-[15px] leading-7 select-none"
+          className="font-mono p-3 text-[13px] md:text-[17px] leading-6 md:leading-7 select-none overflow-x-auto"
           style={{
             color: TOKYO.text,
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
+            whiteSpace: "pre",
           }}
           suppressHydrationWarning
         >
@@ -763,7 +763,7 @@ export default function DragDrop({
         >
           <div
             ref={setQuestionDropRef}
-            className="mb-6 p-4 md:p-5 rounded-2xl min-h-25 border overflow-x-auto transition-colors"
+            className="mb-6  md:p-5 rounded-2xl min-h-25 border overflow-x-auto transition-colors"
             style={
               isCode
                 ? {
@@ -813,48 +813,27 @@ export default function DragDrop({
           </SortableContext>
         )}
 
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-3 justify-end mb-2">
           {!(result?.isCorrect && isCode) && (
-            <motion.button
-              whileHover={{ scale: allFilled && !loading ? 1.03 : 1 }}
-              whileTap={{ scale: allFilled && !loading ? 0.96 : 1 }}
+            <DuolingoButton
               onClick={handleCheck}
               disabled={!allFilled || loading}
-              className="flex-1 min-w-40 py-3 rounded-2xl font-bold text-white text-lg border-b-4 active:border-b-0 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
-              style={{
-                backgroundColor: finalAccent,
-                borderColor: colorDarken(finalAccent, 25),
-              }}
+              loading={loading}
+              loadingText="⏳ Đang kiểm tra..."
+              color={finalAccent}
+              fullWidth
             >
-              {loading ? "⏳ Đang kiểm tra..." : "KIỂM TRA"}
-            </motion.button>
+              KIỂM TRA
+            </DuolingoButton>
           )}
-          <button
+          <DuolingoButton
+            variant="primary"
             onClick={reset}
-            className="px-5 py-3 rounded-2xl font-bold border-b-4 active:border-b-0 transition-all"
-            style={
-              isCode
-                ? {
-                    color: TOKYO.text,
-                    backgroundColor: TOKYO.border,
-                    borderColor: TOKYO.cardBg,
-                  }
-                : {
-                    color: "#4b5563",
-                    backgroundColor: "#f3f4f6",
-                    borderColor: "#e5e7eb",
-                  }
-            }
-            onMouseEnter={(e) => {
-              if (isCode)
-                e.currentTarget.style.backgroundColor = TOKYO.borderMid;
-            }}
-            onMouseLeave={(e) => {
-              if (isCode) e.currentTarget.style.backgroundColor = TOKYO.border;
-            }}
+            color={isCode ? TOKYO.border : "#f3f4f6"}
+            className={isCode ? "text-gray-200" : "text-gray-600"}
           >
             LÀM LẠI
-          </button>
+          </DuolingoButton>
         </div>
 
         <AnimatePresence>
@@ -904,27 +883,4 @@ export default function DragDrop({
       </div>
     </DndContext>
   );
-}
-
-function colorDarken(hex: string, percent: number): string {
-  const h = hex.replace("#", "");
-  const num = parseInt(
-    h.length === 3
-      ? h
-          .split("")
-          .map((c) => c + c)
-          .join("")
-      : h,
-    16,
-  );
-  const r = Math.max(
-    0,
-    ((num >> 16) & 0xff) - Math.round(255 * (percent / 100)),
-  );
-  const g = Math.max(
-    0,
-    ((num >> 8) & 0xff) - Math.round(255 * (percent / 100)),
-  );
-  const b = Math.max(0, (num & 0xff) - Math.round(255 * (percent / 100)));
-  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }

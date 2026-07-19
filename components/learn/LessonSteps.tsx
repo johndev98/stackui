@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type LessonStepsProps = {
