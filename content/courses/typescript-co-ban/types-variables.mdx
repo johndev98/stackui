@@ -4,6 +4,11 @@ quiz:
   q1: "2"
   q2: "string"
   q3: "any"
+
+dragDropQuiz:
+  q1:
+    answers: "const,let,function,return"
+
 order: 2
 ---
 
@@ -19,4 +24,15 @@ order: 2
 <Step>
   Nội dung trang cuối. Kiểu cho phép bất kỳ giá trị nào:{" "}
   <FillBlankQuiz id="q3" />
+</Step>
+
+<Step>
+  <DragDropQuiz
+    id="q1"
+    mode="code"
+    language="ts"
+    accent="#89b4fa"
+    question="{0} PI = 3.14;\n{1} count = 0;\n\n{2} add(a: number, b: number) {\n\t{3} a + b;\n}"
+    options="const,let,var,function,return,class"
+  />
 </Step>

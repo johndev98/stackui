@@ -91,3 +91,73 @@ export async function kiemTraDapAn(
     };
   }
 }
+
+export async function kiemTraDragDropQuiz(
+  courseSlug: string,
+  lessonSlug: string | null,
+  cauTraLoi: string[],
+  quizId: string,
+) {
+  try {
+    if (!courseSlug?.trim()) {
+      return { isCorrect: false, thongBao: "❌ Lỗi: Khóa học không hợp lệ." };
+    }
+    if (!quizId?.trim()) {
+      return { isCorrect: false, thongBao: "❌ Lỗi: Quiz ID không hợp lệ." };
+    }
+
+    const fileName = lessonSlug ?? "_index";
+    const cwd = process.cwd();
+    const duongDan = `${cwd}/content/courses/${courseSlug}/${fileName}.mdx`;
+    const file = await readFile(duongDan, "utf8");
+    const parsed = matter(file);
+    const { data } = parsed;
+
+    if (!data?.dragDropQuiz || typeof data.dragDropQuiz !== "object") {
+      return { isCorrect: false, thongBao: "❌ Lỗi: Không tìm thấy dữ liệu quiz." };
+    }
+    if (!(quizId in data.dragDropQuiz)) {
+      return { isCorrect: false, thongBao: `❌ Lỗi: Không tìm thấy quiz "${quizId}".` };
+    }
+
+    const quizData = data.dragDropQuiz[quizId];
+    const dapAnDungStr = String(quizData.answers ?? "");
+    if (!dapAnDungStr.trim()) {
+      return { isCorrect: false, thongBao: "❌ Lỗi: Đáp án quiz bị trống." };
+    }
+
+    const dapAnDung = dapAnDungStr
+      .split(",")
+      .map((a: string) => a.trim())
+      .filter(Boolean);
+
+    if (cauTraLoi.length !== dapAnDung.length) {
+      return { isCorrect: false, thongBao: "❌ Chưa điền đủ đáp án." };
+    }
+
+    const choPhepKhongDau = Boolean(data.choPhepKhongDau ?? false);
+
+    let isCorrect = true;
+    for (let i = 0; i < dapAnDung.length; i++) {
+      const userAns = cauTraLoi[i] ?? "";
+      const correct = dapAnDung[i];
+      const match = choPhepKhongDau
+        ? chuanHoaBoDau(userAns) === chuanHoaBoDau(correct)
+        : chuanHoaNghiemNgat(userAns) === chuanHoaNghiemNgat(correct);
+      if (!match) {
+        isCorrect = false;
+        break;
+      }
+    }
+
+    return {
+      isCorrect,
+      thongBao: isCorrect
+        ? "🎉 Chính xác tuyệt đối!"
+        : "😅 Chưa đúng hết, kéo đổi thử lại nhé.",
+    };
+  } catch (error) {
+    console.error("Error in kiemTraDragDropQuiz:", error);
+    return { isCorrect: false, thongBao: "❌ Lỗi khi kiểm tra đáp án." };
+  }
+}

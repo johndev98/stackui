@@ -5,6 +5,7 @@ import remarkFrontmatter from "remark-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
 import { useMDXComponents } from "@/mdx-components";
 import { FillBlankQuiz } from "@/content/courses/_shared/ClientQuiz";
+import { DragDropQuiz } from "@/components/learn/DragDropQuiz";
 import LessonSteps from "@/components/learn/LessonSteps";
 
 type LessonContentProps = {
@@ -44,6 +45,7 @@ export async function LessonContent({
   const tatCaComponents = {
     ...useMDXComponents(),
     FillBlankQuiz,
+    DragDropQuiz,
   };
 
   // Validate content size before regex to prevent catastrophic backtracking
@@ -84,6 +86,7 @@ export async function LessonContent({
           components={{
             ...useMDXComponents(),
             FillBlankQuiz,
+            DragDropQuiz,
           }}
         />
       </div>
