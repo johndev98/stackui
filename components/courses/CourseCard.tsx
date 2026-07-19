@@ -73,7 +73,7 @@ export function CourseCard({
         <hr className="border-neutral-700" />
 
         {/* Footer luôn nằm dưới */}
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center mt-2">
           <div>
             <span
               className={`text-content text-md line-through ${oldPrice === 0 ? "invisible" : ""}`}
