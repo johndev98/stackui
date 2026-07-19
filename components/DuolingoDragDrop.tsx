@@ -39,6 +39,7 @@ export type DuolingoDragDropProps = {
   onCheck?: (userAnswers: Record<string, string>) => Promise<{
     isCorrect: boolean;
     explanation?: string;
+    slotStates?: Record<string, "idle" | "correct" | "wrong">;
   }>;
 };
 
@@ -591,7 +592,11 @@ export default function DuolingoDragDrop({
       if (onCheck) {
         const r = await onCheck(answers);
         const st: Record<string, "idle" | "correct" | "wrong"> = {};
-        blankIds.forEach((id) => (st[id] = r.isCorrect ? "correct" : "idle"));
+        if (r.slotStates && Object.keys(r.slotStates).length > 0) {
+          blankIds.forEach((id) => (st[id] = r.slotStates![id] ?? "idle"));
+        } else {
+          blankIds.forEach((id) => (st[id] = r.isCorrect ? "correct" : "wrong"));
+        }
         setResult({ ...r, slotStates: st });
         if (!r.isCorrect) setShakeKey((k) => k + 1);
         return;

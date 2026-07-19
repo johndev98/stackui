@@ -15,10 +15,21 @@ type DragDropQuizProps = {
   accent?: string;
 };
 
-function shuffleArray<T>(arr: T[]): T[] {
+function hashString(str: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function shuffleArray<T>(arr: T[], seed: number): T[] {
   const a = [...arr];
+  let s = seed;
   for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    s = (s * 1664525 + 1013904223) >>> 0;
+    const j = s % (i + 1);
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
@@ -75,7 +86,10 @@ export function DragDropQuiz({
 
   const blankSegments = useMemo(() => parseQuestion(question), [question]);
   const rawOptions = useMemo(() => parseOptions(options), [options]);
-  const shuffledOptions = useMemo(() => shuffleArray(rawOptions), [rawOptions]);
+  const shuffledOptions = useMemo(
+    () => shuffleArray(rawOptions, hashString(id)),
+    [rawOptions, id],
+  );
 
   const blankIds = useMemo(
     () =>
@@ -113,9 +127,11 @@ export function DragDropQuiz({
           answerLabels,
           id,
         );
-        return res.isCorrect
-          ? { isCorrect: true, explanation: res.thongBao }
-          : { isCorrect: false, explanation: res.thongBao };
+        return {
+          isCorrect: res.isCorrect,
+          explanation: res.thongBao,
+          slotStates: res.slotStates as Record<string, "idle" | "correct" | "wrong"> | undefined,
+        };
       } catch {
         return { isCorrect: false, explanation: "Lỗi khi kiểm tra. Thử lại." };
       }
