@@ -248,7 +248,7 @@ function DropSlot({
             ? `0 0 0 3px ${isCode ? TOKYO.hover : "#1cb0f6"}44, 0 6px 20px ${isCode ? TOKYO.hover : "#1cb0f6"}33`
             : "0 0 0 transparent",
       }}
-      className={`inline-flex items-center justify-center mx-0.5 rounded-md border-b-2 font-semibold transition-all align-middle outline-none
+      className={`inline-flex items-center justify-center rounded-md border-b-2 font-semibold transition-all align-middle outline-none
         ${filledLabel ? "cursor-grab active:cursor-grabbing hover:brightness-110 focus-visible:ring-2" : ""} 
         ${isCode ? "font-mono text-sm" : "text-base"}`}
       // ✅ Áp dụng transform + style khi kéo để ô di chuyển theo con trỏ
@@ -260,7 +260,7 @@ function DropSlot({
         minWidth: filledLabel ? "auto" : isCode ? "56px" : "76px",
         height: isCode ? "26px" : "32px",
         padding: isCode ? "0 8px" : "0 14px",
-        borderWidth: isActiveTarget ? "3px" : "2px",
+        borderWidth: isActiveTarget ? "2px" : "1px",
         borderColor: palette.border[state === "idle" ? "idle" : state],
         borderStyle: filledLabel ? "solid" : "dashed",
         backgroundColor: palette.bg[state === "idle" ? "idle" : state],
@@ -304,6 +304,14 @@ export default function DragDrop({
   const [shakeKey, setShakeKey] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const [shiki, setShiki] = useState<Highlighter | null>(null);
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    if (showToast) {
+      const t = setTimeout(() => setShowToast(false), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [showToast]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -555,11 +563,13 @@ export default function DragDrop({
       return n;
     });
     setResult(null);
+    setShowToast(false);
   };
 
   const handleDragStart = (e: DragStartEvent) => {
     setClosestTargetId(null);
     setResult(null);
+    setShowToast(false);
   };
 
   const handleDragOver = (e: DragOverEvent) => {
@@ -631,6 +641,7 @@ export default function DragDrop({
           );
         }
         setResult({ ...r, slotStates: st });
+        setShowToast(true);
         if (!r.isCorrect) setShakeKey((k) => k + 1);
       }
     } finally {
@@ -641,6 +652,7 @@ export default function DragDrop({
   const reset = () => {
     setAnswers({});
     setResult(null);
+    setShowToast(false);
   };
 
   /* ---------- RENDER CÂU HỎI ---------- */
@@ -835,52 +847,60 @@ export default function DragDrop({
             LÀM LẠI
           </DuolingoButton>
         </div>
-
-        <AnimatePresence>
-          {result && (
-            <motion.div
-              initial={{ opacity: 0, y: 12, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              className="mt-5 p-4 rounded-2xl border-b-4 font-semibold"
-              style={
-                isCode
-                  ? result.isCorrect
-                    ? {
-                        backgroundColor: `${TOKYO.correct}22`,
-                        color: TOKYO.correct,
-                        borderColor: TOKYO.correct,
-                      }
-                    : {
-                        backgroundColor: `${TOKYO.wrong}22`,
-                        color: TOKYO.wrong,
-                        borderColor: TOKYO.wrong,
-                      }
-                  : undefined
-              }
-            >
-              <p
-                className={`text-lg ${!isCode ? (result.isCorrect ? "text-[#2e7d32]" : "text-[#ca282d]") : ""}`}
-                style={
-                  !isCode
-                    ? {
-                        backgroundColor: result.isCorrect
-                          ? "#d7ffb8"
-                          : "#ffdfe0",
-                        borderBottomColor: result.isCorrect
-                          ? "#58a700"
-                          : "#f95459",
-                      }
-                    : undefined
-                }
-              >
-                {result.explanation}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {showToast && result && (
+          <motion.div
+            initial={{ opacity: 0, x: 80, y: -20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: 80, y: -20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            className="fixed top-5 right-5 z-50 px-5 py-3 rounded-2xl shadow-2xl border-b-4 font-bold text-base flex items-center gap-3 text-white"
+            style={{
+              backgroundColor: result.isCorrect
+                ? isCode
+                  ? TOKYO.correct
+                  : "#2e7d32"
+                : isCode
+                  ? TOKYO.wrong
+                  : "#ca282d",
+              borderColor: result.isCorrect
+                ? isCode
+                  ? colorDarken(TOKYO.correct, 25)
+                  : "#1b5e20"
+                : isCode
+                  ? colorDarken(TOKYO.wrong, 25)
+                  : "#b71c1c",
+            }}
+          >
+            <span>{result.explanation}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </DndContext>
   );
+}
+
+function colorDarken(hex: string, percent: number): string {
+  const h = hex.replace("#", "");
+  const num = parseInt(
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h,
+    16,
+  );
+  const r = Math.max(
+    0,
+    ((num >> 16) & 0xff) - Math.round(255 * (percent / 100)),
+  );
+  const g = Math.max(
+    0,
+    ((num >> 8) & 0xff) - Math.round(255 * (percent / 100)),
+  );
+  const b = Math.max(0, (num & 0xff) - Math.round(255 * (percent / 100)));
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
