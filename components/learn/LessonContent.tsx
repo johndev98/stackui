@@ -6,6 +6,7 @@ import rehypePrettyCode from "rehype-pretty-code";
 import { useMDXComponents } from "@/mdx-components";
 import { FillBlankQuiz } from "@/components/learn/ClientQuiz";
 import { DragDropQuiz } from "@/components/learn/DragDropQuiz";
+import { SplitLayout, SplitLeft, SplitRight } from "@/components/learn/SplitLayout";
 import LessonSteps from "@/components/learn/LessonSteps";
 
 type LessonContentProps = {
@@ -47,6 +48,9 @@ export async function LessonContent({
     ...useMDXComponents(),
     FillBlankQuiz,
     DragDropQuiz,
+    SplitLayout,
+    SplitLeft,
+    SplitRight,
   };
 
   // Validate content size before regex to prevent catastrophic backtracking
@@ -61,45 +65,40 @@ export async function LessonContent({
     );
   }
 
-  let stepMatches: RegExpMatchArray[] = [];
-  try {
-    stepMatches = Array.from(
-      content.matchAll(/<Step(?:\s[^>]*)?>([\s\S]*?)<\/Step>/gi),
-    );
-  } catch (error) {
-    console.error("Error parsing step blocks:", error);
-    // Fallback: treat entire content as single step
-    return (
-      <div className="space-y-4">
-        <MDXRemote
-          source={content}
-          options={{
-            mdxOptions: {
-              remarkPlugins: [remarkFrontmatter],
-              rehypePlugins: [
-                [
-                  rehypePrettyCode,
-                  { theme: "tokyo-night", keepBackground: true },
-                ],
-              ],
-            },
-          }}
-          components={{
-            ...useMDXComponents(),
-            FillBlankQuiz,
-            DragDropQuiz,
-          }}
-        />
-      </div>
-    );
+  function extractSteps(src: string): string[] {
+    const steps: string[] = [];
+    const tagOpen = /<Step(?:\s[^>]*)?>/gi;
+    let m: RegExpExecArray | null;
+    while ((m = tagOpen.exec(src)) !== null) {
+      let depth = 1;
+      const start = m.index + m[0].length;
+      let pos = start;
+      while (depth > 0 && pos < src.length) {
+        const nextOpen = src.indexOf("<Step", pos);
+        const nextClose = src.indexOf("</Step>", pos);
+        if (nextClose === -1) break;
+        if (nextOpen !== -1 && nextOpen < nextClose) {
+          depth++;
+          pos = nextOpen + 5;
+        } else {
+          depth--;
+          if (depth === 0) steps.push(src.slice(start, nextClose));
+          pos = nextClose + 7;
+        }
+      }
+    }
+    return steps;
   }
 
-  const hasStepBlocks = stepMatches.length > 0;
-  const stepContents = hasStepBlocks
-    ? stepMatches
-        .map((match) => match[1]?.trim())
-        .filter((content): content is string => Boolean(content))
-    : [content];
+  let stepContents: string[] = [];
+  try {
+    stepContents = extractSteps(content);
+  } catch (error) {
+    console.error("Error parsing step blocks:", error);
+  }
+
+  const hasStepBlocks = stepContents.length > 0;
+  if (!hasStepBlocks) stepContents = [content];
 
   return (
     <div className="space-y-4">
