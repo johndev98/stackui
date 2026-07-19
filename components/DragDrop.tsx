@@ -825,28 +825,55 @@ export default function DragDrop({
           </SortableContext>
         )}
 
-        <div className="flex gap-3 justify-end mb-2">
-          {!(result?.isCorrect && isCode) && (
-            <DuolingoButton
-              onClick={handleCheck}
-              disabled={!allFilled || loading}
-              loading={loading}
-              loadingText="⏳ Đang kiểm tra..."
-              color={finalAccent}
-              fullWidth
-            >
-              KIỂM TRA
-            </DuolingoButton>
-          )}
-          <DuolingoButton
-            variant="primary"
-            onClick={reset}
-            color={isCode ? TOKYO.border : "#f3f4f6"}
-            className={isCode ? "text-gray-200" : "text-gray-600"}
+        <motion.div
+          layout
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className={`flex gap-3 mb-2 ${
+            result?.isCorrect && isCode ? "justify-center" : "justify-end"
+          }`}
+        >
+          <AnimatePresence>
+            {!(result?.isCorrect && isCode) && (
+              <motion.div
+                key="check"
+                initial={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.35 }}
+                className="flex-1"
+              >
+                <DuolingoButton
+                  onClick={handleCheck}
+                  disabled={!allFilled || loading}
+                  loading={loading}
+                  loadingText="⏳ Đang kiểm tra..."
+                  color={finalAccent}
+                  fullWidth
+                >
+                  KIỂM TRA
+                </DuolingoButton>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <motion.div
+            layout
+            transition={{
+              type: "spring",
+              stiffness: 120,
+              damping: 18,
+              mass: 2,
+              duration: 1,
+            }}
           >
-            LÀM LẠI
-          </DuolingoButton>
-        </div>
+            <DuolingoButton
+              variant="primary"
+              onClick={reset}
+              color={isCode ? TOKYO.border : "#f3f4f6"}
+              className={isCode ? "text-gray-200" : "text-gray-600"}
+            >
+              LÀM LẠI
+            </DuolingoButton>
+          </motion.div>
+        </motion.div>
       </div>
 
       <AnimatePresence>
