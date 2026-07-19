@@ -3,9 +3,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   DndContext,
-  closestCenter,
+  closestCorners,
   KeyboardSensor,
   PointerSensor,
+  useDroppable,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -387,6 +388,10 @@ export default function DuolingoDragDrop({
     }),
   );
 
+  const { setNodeRef: setQuestionDropRef } = useDroppable({
+    id: "question-drop-zone",
+  });
+
   const blankIds = useMemo(
     () =>
       question
@@ -540,13 +545,24 @@ export default function DuolingoDragDrop({
   const handleDragOver = (e: DragOverEvent) => {
     const over = e.over?.id as string | null;
     setOverId(over);
-    if (over && blankIds.includes(over)) setClosestTargetId(over);
-    else if (!over) setClosestTargetId(null);
+    if (over && blankIds.includes(over)) {
+      setClosestTargetId(over);
+    } else if (over === "question-drop-zone") {
+      // Đang hover trên vùng câu hỏi → tìm blank trống gần nhất
+      const firstEmpty = blankIds.find((id) => !answers[id]);
+      if (firstEmpty) setClosestTargetId(firstEmpty);
+    } else if (!over) {
+      setClosestTargetId(null);
+    }
   };
 
   const handleDragEnd = (e: DragEndEvent) => {
     const from = e.active.id as string;
-    const to: string | null = (e.over?.id as string) ?? closestTargetId;
+    const overId_raw = e.over?.id as string | null;
+    // Nếu drop trên container, dùng closestTargetId (blank trống gần nhất)
+    const to: string | null =
+      (overId_raw && blankIds.includes(overId_raw) ? overId_raw : null) ??
+      closestTargetId;
 
     setActiveId(null);
     setOverId(null);
@@ -717,7 +733,7 @@ export default function DuolingoDragDrop({
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={closestCorners}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
@@ -761,11 +777,20 @@ export default function DuolingoDragDrop({
           strategy={horizontalListSortingStrategy}
         >
           <div
-            className="mb-6 p-4 md:p-5 rounded-2xl min-h-[100px] border overflow-x-auto"
+            ref={setQuestionDropRef}
+            className="mb-6 p-4 md:p-5 rounded-2xl min-h-[100px] border overflow-x-auto transition-colors"
             style={
               isCode
-                ? { backgroundColor: TOKYO.surface, borderColor: TOKYO.border }
-                : { backgroundColor: "#f9fafb", borderColor: "#f3f4f6" }
+                ? {
+                    backgroundColor: closestTargetId
+                      ? `${TOKYO.hover}11`
+                      : TOKYO.surface,
+                    borderColor: closestTargetId ? TOKYO.hover : TOKYO.border,
+                  }
+                : {
+                    backgroundColor: closestTargetId ? "#e5f7ff" : "#f9fafb",
+                    borderColor: closestTargetId ? "#1cb0f6" : "#f3f4f6",
+                  }
             }
           >
             {renderQuestion()}
