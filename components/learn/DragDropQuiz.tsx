@@ -2,11 +2,8 @@
 
 import { useMemo, useCallback } from "react";
 import { useParams } from "next/navigation";
-import DuolingoDragDrop from "@/components/demos/DuolingoDragDrop";
-import type {
-  BlankSegment,
-  AnswerOption,
-} from "@/components/demos/DuolingoDragDrop";
+import DuolingoDragDrop from "@/components/DuolingoDragDrop";
+import type { BlankSegment, AnswerOption } from "@/components/DuolingoDragDrop";
 import { kiemTraDragDropQuiz } from "@/content/courses/_shared/actions";
 
 type DragDropQuizProps = {

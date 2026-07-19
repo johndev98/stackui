@@ -8,23 +8,12 @@ quiz:
 dragDropQuiz:
   q1:
     answers: "const,let,function,return"
-
+  q2:
+    answers: "tĩnh,chạy,thu"
 order: 2
 ---
 
 # {frontmatter.title}
-
-<Step>
-  Nội dung trang đầu. Hãy điền key `2`: <FillBlankQuiz id="q1" />
-</Step>
-<Step>
-  Nội dung trang thứ hai. Kiểu `___` biểu diễn chuỗi: <FillBlankQuiz id="q2" />
-</Step>
-
-<Step>
-  Nội dung trang cuối. Kiểu cho phép bất kỳ giá trị nào:{" "}
-  <FillBlankQuiz id="q3" />
-</Step>
 
 <Step>
   <DragDropQuiz
@@ -35,4 +24,23 @@ order: 2
     question="{0} PI = 3.14;\n{1} count = 0;\n\n{2} add(a: number, b: number) {\n\t{3} a + b;\n}"
     options="const,let,var,function,return,class"
   />
+</Step>
+<Step>
+  <DragDropQuiz
+    id="q2"
+    mode="text"
+    question="TypeScript bổ sung hệ thống kiểu dữ liệu {0}, giúp phát hiện lỗi trước khi {1} ứng dụng, tiết kiệm thời gian {2} sau này."
+    options="tĩnh,động,chạy,xây,thu"
+  />
+</Step>
+<Step>
+  Nội dung trang đầu. Hãy điền key `2`: <FillBlankQuiz id="q1" />
+</Step>
+<Step>
+  Nội dung trang thứ hai. Kiểu `___` biểu diễn chuỗi: <FillBlankQuiz id="q2" />
+</Step>
+
+<Step>
+  Nội dung trang cuối. Kiểu cho phép bất kỳ giá trị nào:{" "}
+  <FillBlankQuiz id="q3" />
 </Step>
