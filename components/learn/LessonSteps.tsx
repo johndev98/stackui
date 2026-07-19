@@ -50,8 +50,8 @@ export default function LessonSteps({
   };
 
   return (
-    <div className="relative min-h-screen">
-      <div className="h-screen overflow-hidden">{currentStepContent}</div>
+    <div className="relative">
+      <div className=" ">{currentStepContent}</div>
 
       <div className="sticky bottom-0 left-0 right-0 border-t border-white/10 bg-page-bg/90 backdrop-blur-md py-4 px-6 flex items-center justify-between gap-4">
         <button

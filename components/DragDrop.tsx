@@ -44,21 +44,21 @@ export type DragDropProps = {
 };
 
 const TOKYO = {
-  cardBg: "#0d1117",
-  surface: "#161b22",
-  surfaceDark: "#010409",
-  border: "#30363d",
-  borderMid: "#484f58",
-  text: "#c9d1d9",
-  subtitle: "#8b949e",
-  hover: "#58a6ff",
-  correct: "#3fb950",
-  blue: "#58a6ff",
-  wrong: "#f85149",
-  comment: "#484f58",
-  dotRed: "#f85149",
-  dotYellow: "#d29922",
-  dotGreen: "#3fb950",
+  cardBg: "#1e1e1e",
+  surface: "#252526",
+  surfaceDark: "#181818",
+  border: "#3c3c3c",
+  borderMid: "#4a4a4a",
+  text: "#d4d4d4",
+  subtitle: "#808080",
+  hover: "#569cd6",
+  correct: "#6a9955",
+  blue: "#569cd6",
+  wrong: "#f44747",
+  comment: "#608b4e",
+  dotRed: "#f44747",
+  dotYellow: "#dcdcaa",
+  dotGreen: "#6a9955",
 } as const;
 
 function SortableChip({
@@ -308,7 +308,7 @@ export default function DragDrop({
     setIsMounted(true);
     import("shiki").then(async ({ createHighlighter }) => {
       const h = await createHighlighter({
-        themes: ["github-dark-default"],
+        themes: ["dark-plus"],
         langs: [
           "ts",
           "tsx",
@@ -427,7 +427,7 @@ export default function DragDrop({
 
     const { tokens } = shiki.codeToTokens(codeStr, {
       lang: language,
-      theme: "github-dark-default",
+      theme: "dark-plus",
     });
 
     let bc = 0;
@@ -520,7 +520,7 @@ export default function DragDrop({
 
     const { tokens } = shiki.codeToTokens(codeStr, {
       lang: language,
-      theme: "github-dark-default",
+      theme: "dark-plus",
     });
 
     const out: React.ReactNode[] = [];
