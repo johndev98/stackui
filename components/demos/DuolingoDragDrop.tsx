@@ -43,7 +43,7 @@ export type DuolingoDragDropProps = {
 };
 
 /* =========================================================
-   🎨 TOKYO NIGHT (CHUẨN BẢNG BẠN GỬI)
+   🎨 TOKYO NIGHT
    ========================================================= */
 const TOKYO = {
   cardBg: "#1a1b26",
@@ -64,7 +64,7 @@ const TOKYO = {
 } as const;
 
 /* =========================================================
-   🧱 SORTABLE CHIP (ĐÃ SỬA LỖI 2 STYLE + HOÀN THIỆN)
+   🧱 SORTABLE CHIP (ĐÁP ÁN KÉO ĐƯỢC + CLICK AUTO-FILL)
    ========================================================= */
 function SortableChip({
   id,
@@ -91,7 +91,6 @@ function SortableChip({
   } = useSortable({ id, disabled: used });
   const isCode = mode === "code";
 
-  // ✅ GỘP TẤT CẢ STYLE VÀO 1 OBJECT DUY NHẤT → KHÔNG BỊ TRÙNG TÊN
   const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform),
     transition,
@@ -108,7 +107,7 @@ function SortableChip({
     borderStyle: "solid",
     zIndex: isDragging ? 9999 : "auto",
     boxShadow: isDragging ? `0 10px 30px ${accent}55` : undefined,
-    outlineColor: accent, // ✅ thêm outlineColor vào đây luôn
+    outlineColor: accent,
   };
 
   const handleClick = (e: React.MouseEvent) => {
@@ -127,7 +126,7 @@ function SortableChip({
   return (
     <motion.div
       ref={setNodeRef}
-      style={style} // ✅ CHỈ CÒN 1 STYLE DUY NHẤT → KHÔNG LỖI TS(17001)
+      style={style}
       {...attributes}
       {...listeners}
       onClick={handleClick}
@@ -152,7 +151,7 @@ function SortableChip({
 }
 
 /* =========================================================
-   ⬜ DROP SLOT (Ô CẦN THẢ / CLICK TRẢ ĐÁP ÁN VỀ)
+   ⬜ DROP SLOT — ✅ ĐÃ SỬA: KÉO ĐƯỢC ĐỂ HOÁN ĐỔI GIỮA CÁC Ô
    ========================================================= */
 function DropSlot({
   blank,
@@ -171,7 +170,18 @@ function DropSlot({
   onClick: () => void;
   mode?: "text" | "code";
 }) {
-  const { setNodeRef } = useSortable({ id: blank.id });
+  // ✅ KEY FIX: LẤY ĐỦ TẤT CẢ THUỘC TÍNH TỪ useSortable
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: blank.id,
+    disabled: !filledLabel, // ✅ CHỈ KÉO ĐƯỢC KHI Ô ĐÃ CÓ ĐÁP ÁN
+  });
   const isCode = mode === "code";
 
   const textColors = {
@@ -210,27 +220,39 @@ function DropSlot({
   };
   const palette = isCode ? codeColors : textColors;
 
+  // ✅ Kết hợp sự kiện click: click thường = xóa đáp án, kéo >4px = hoán đổi
+  const handleSlotClick = (e: React.MouseEvent) => {
+    listeners?.onClick?.(e);
+    onClick();
+  };
+  const handleSlotKeyDown = (e: React.KeyboardEvent) => {
+    if (
+      filledLabel &&
+      (e.key === "Enter" ||
+        e.key === " " ||
+        e.key === "Backspace" ||
+        e.key === "Delete")
+    ) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <motion.span
       ref={setNodeRef}
-      onClick={onClick}
+      // ✅ TRUYỀN ĐỦ attributes + listeners ĐỂ KÉO ĐƯỢC
+      {...attributes}
+      {...listeners}
+      onClick={handleSlotClick}
+      onKeyDown={handleSlotKeyDown}
       role="button"
       tabIndex={filledLabel ? 0 : -1}
-      onKeyDown={(e) => {
-        if (
-          filledLabel &&
-          (e.key === "Enter" ||
-            e.key === " " ||
-            e.key === "Backspace" ||
-            e.key === "Delete")
-        ) {
-          e.preventDefault();
-          onClick();
-        }
-      }}
+      aria-disabled={!filledLabel}
       suppressHydrationWarning
       layout
       transition={{ type: "spring", stiffness: 350, damping: 28 }}
+      whileDrag={{ scale: 1.08 }} // ✅ Phồng nhẹ khi kéo ô
       animate={{
         scale: isActiveTarget && !filledLabel ? 1.08 : 1,
         boxShadow:
@@ -239,9 +261,14 @@ function DropSlot({
             : "0 0 0 transparent",
       }}
       className={`inline-flex items-center justify-center mx-0.5 rounded-md border-b-[2px] font-semibold transition-all align-middle outline-none
-        ${filledLabel ? "cursor-pointer hover:brightness-110 focus-visible:ring-2" : ""} 
+        ${filledLabel ? "cursor-grab active:cursor-grabbing hover:brightness-110 focus-visible:ring-2" : ""} 
         ${isCode ? "font-mono text-sm" : "text-base"}`}
+      // ✅ Áp dụng transform + style khi kéo để ô di chuyển theo con trỏ
       style={{
+        transform: CSS.Translate.toString(transform),
+        transition,
+        opacity: isDragging ? 0.4 : 1,
+        zIndex: isDragging ? 9999 : "auto",
         minWidth: filledLabel ? "auto" : isCode ? "68px" : "76px",
         height: isCode ? "30px" : "42px",
         padding: isCode ? "0 10px" : "0 14px",
@@ -254,7 +281,7 @@ function DropSlot({
       }}
       title={
         filledLabel
-          ? "Click / Enter để trả đáp án về"
+          ? "Kéo để hoán đổi / Click để trả đáp án về"
           : "Kéo đáp án vào đây / click đáp án bên dưới"
       }
     >
@@ -301,9 +328,7 @@ export default function DuolingoDragDrop({
     import("shiki").then(async ({ createHighlighter }) => {
       const h = await createHighlighter({
         themes: ["tokyo-night"],
-        // ✅ DÙNG TÊN NGẮN GỌN CHUẨN SHIKI, TẤT CẢ NGÔN NGỮ PHỔ BIẾN
         langs: [
-          // Web / Frontend
           "ts",
           "tsx",
           "js",
@@ -314,7 +339,6 @@ export default function DuolingoDragDrop({
           "less",
           "vue",
           "svelte",
-          // Script / Đa dụng
           "py",
           "rb",
           "php",
@@ -328,7 +352,6 @@ export default function DuolingoDragDrop({
           "yml",
           "xml",
           "md",
-          // Hệ thống / Thông dụng
           "c",
           "cpp",
           "rs",
@@ -341,7 +364,6 @@ export default function DuolingoDragDrop({
           "swift",
           "scala",
           "lua",
-          // CSDL / Khác
           "sql",
           "graphql",
           "prisma",
@@ -364,7 +386,6 @@ export default function DuolingoDragDrop({
     }),
   );
 
-  // 👉 THỨ TỰ Ô TRỐNG: trái → phải, trên → dưới (theo thứ tự trong question)
   const blankIds = useMemo(
     () =>
       question
@@ -390,45 +411,29 @@ export default function DuolingoDragDrop({
   const usedIds = Object.values(answers);
   const allFilled = blankIds.length > 0 && blankIds.every((id) => answers[id]);
 
-  /* =========================================================
-     ✅ MỚI: LOGIC CLICK ĐÁP ÁN → AUTO-FILL THEO THỨ TỰ
-     Quy tắc chuẩn Duolingo:
-     1. Click đáp án CHƯA DÙNG → điền vào Ô TRỐNG ĐẦU TIÊN (trái→phải)
-     2. Click đáp án ĐÃ DÙNG → trả về khung chọn
-     3. Nếu ô đích đã có đáp án cũ → đáp án cũ tự quay về
-     ========================================================= */
+  /* ---------- CLICK ĐÁP ÁN → AUTO-FILL THEO THỨ TỰ ---------- */
   const handleChipClick = (chipId: string) => {
     setResult(null);
     setAnswers((prev) => {
       const next = { ...prev };
-
-      // 1. Nếu đáp án đã nằm trong 1 ô → click = trả về khung
       const currentSlot = Object.keys(next).find((k) => next[k] === chipId);
       if (currentSlot) {
         delete next[currentSlot];
         return next;
       }
-
-      // 2. Tìm ô trống ĐẦU TIÊN theo thứ tự blankIds
       const firstEmptySlot = blankIds.find((id) => !next[id]);
-      if (!firstEmptySlot) return prev; // hết ô trống → bỏ qua
-
-      // 3. Đảm bảo đáp án này không bị lặp ở đâu
+      if (!firstEmptySlot) return prev;
       Object.keys(next).forEach((k) => {
         if (next[k] === chipId) delete next[k];
       });
-
-      // 4. Điền vào ô trống đầu tiên (đáp án cũ nếu có sẽ được ghi đè = tự trả về)
       next[firstEmptySlot] = chipId;
       return next;
     });
   };
 
-  // ✨ TÔ MÀU CODE (ĐÃ SỬA: HỖ TRỢ MỌI NGÔN NGỮ NHƯ PYTHON, C++, RUST...)
+  /* ---------- TÔ MÀU CODE (HỖ TRỢ MỌI NGÔN NGỮ) ---------- */
   const renderedCode = useMemo(() => {
     if (!isCode || !isMounted || !shiki) return null;
-
-    // ✅ Dùng ký tự đặc biệt KHÔNG HỢP LỆ → Shiki LUÔN tách thành token riêng
     const PLACEHOLDER = "\uFFFF";
     let codeStr = "";
     question.forEach((s) => {
@@ -446,12 +451,9 @@ export default function DuolingoDragDrop({
 
     tokens.forEach((line, li) => {
       line.forEach((tok) => {
-        // ✅ Kiểm tra nếu token chứa ký tự đặc biệt → tách thành các ô trống
         if (tok.content.includes(PLACEHOLDER)) {
-          // Tách từng vị trí ô trống
           const parts = tok.content.split(PLACEHOLDER);
           parts.forEach((textPart, idx) => {
-            // Phần chữ bình thường trước ô trống
             if (textPart) {
               out.push(
                 <span
@@ -467,7 +469,6 @@ export default function DuolingoDragDrop({
                 </span>,
               );
             }
-            // Ô trống (trừ phần cuối cùng sau khi tách)
             if (idx < parts.length - 1) {
               const bid = blankIds[bc++];
               if (bid) {
@@ -497,8 +498,6 @@ export default function DuolingoDragDrop({
           });
           return;
         }
-
-        // Phần chữ bình thường
         out.push(
           <span
             key={`t-${gk++}`}
@@ -512,12 +511,8 @@ export default function DuolingoDragDrop({
           </span>,
         );
       });
-
-      if (li < tokens.length - 1) {
-        out.push(<span key={`n-${li}`}>{"\n"}</span>);
-      }
+      if (li < tokens.length - 1) out.push(<span key={`n-${li}`}>{"\n"}</span>);
     });
-
     return out;
   }, [
     isCode,
@@ -534,7 +529,7 @@ export default function DuolingoDragDrop({
     result,
   ]);
 
-  /* ---------- 🎯 LOGIC KÉO THẢ AUTO-SNAP ---------- */
+  /* ---------- 🎯 LOGIC KÉO THẢ + HOÁN ĐỔI Ô TRỐNG ---------- */
   const handleDragStart = (e: DragStartEvent) => {
     setActiveId(e.active.id as string);
     setClosestTargetId(null);
@@ -544,48 +539,50 @@ export default function DuolingoDragDrop({
   const handleDragOver = (e: DragOverEvent) => {
     const over = e.over?.id as string | null;
     setOverId(over);
-    if (over && blankIds.includes(over)) {
-      setClosestTargetId(over);
-    } else if (!over) {
-      setClosestTargetId(null);
-    }
+    if (over && blankIds.includes(over)) setClosestTargetId(over);
+    else if (!over) setClosestTargetId(null);
   };
 
   const handleDragEnd = (e: DragEndEvent) => {
     const from = e.active.id as string;
-    let to: string | null = (e.over?.id as string) ?? closestTargetId;
+    const to: string | null = (e.over?.id as string) ?? closestTargetId;
 
     setActiveId(null);
     setOverId(null);
     setClosestTargetId(null);
 
-    if (!to) return;
-    if (!blankIds.includes(to)) return;
-
+    if (!to || !blankIds.includes(to)) return;
     const fromIsBlank = blankIds.includes(from);
 
     setAnswers((prev) => {
       const next = { ...prev };
 
+      // 1. Kéo từ DANH SÁCH đáp án → ô trống
       if (!fromIsBlank) {
         Object.keys(next).forEach((k) => {
           if (next[k] === from) delete next[k];
         });
         next[to] = from;
-      } else if (fromIsBlank && from !== to) {
-        const movingAnswer = prev[from];
-        const existingAnswer = prev[to];
-        if (!movingAnswer) return prev;
-        delete next[from];
-        next[to] = movingAnswer;
-        if (existingAnswer) next[from] = existingAnswer;
+        return next;
+      }
+
+      // 2. ✅ HOÁN ĐỔI / DI CHUYỂN GIỮA 2 Ô TRỐNG VỚI NHAU
+      if (fromIsBlank && from !== to) {
+        const valueFrom = prev[from]; // Đáp án ở ô nguồn
+        const valueTo = prev[to]; // Đáp án ở ô đích
+        if (!valueFrom) return prev; // Ô nguồn trống → bỏ qua
+
+        next[to] = valueFrom;
+        if (valueTo)
+          next[from] = valueTo; // Cả 2 có đáp án → HOÁN ĐỔI
+        else delete next[from]; // Ô đích trống → CHỈ DI CHUYỂN
       }
 
       return next;
     });
   };
 
-  /* ---------- KIỂM TRA ---------- */
+  /* ---------- KIỂM TRA ĐÁP ÁN ---------- */
   const handleCheck = async () => {
     if (!allFilled) return;
     setLoading(true);
@@ -595,11 +592,7 @@ export default function DuolingoDragDrop({
         const r = await onCheck(answers);
         const st: Record<string, "idle" | "correct" | "wrong"> = {};
         blankIds.forEach((id) => (st[id] = r.isCorrect ? "correct" : "idle"));
-        setResult({
-          isCorrect: r.isCorrect,
-          explanation: r.explanation,
-          slotStates: st,
-        });
+        setResult({ ...r, slotStates: st });
         if (!r.isCorrect) setShakeKey((k) => k + 1);
         return;
       }
@@ -613,10 +606,10 @@ export default function DuolingoDragDrop({
       });
       setResult({
         isCorrect: ok,
+        slotStates: st,
         explanation: ok
           ? "Tuyệt vời! Bạn đã làm đúng hoàn toàn 🎉"
           : "Có vài chỗ chưa đúng, bạn thử kéo đổi lại nhé 💪",
-        slotStates: st,
       });
       if (!ok) setShakeKey((k) => k + 1);
     } finally {
@@ -797,7 +790,7 @@ export default function DuolingoDragDrop({
                 used={usedIds.includes(o.id)}
                 accent={finalAccent}
                 mode={mode}
-                onClick={() => handleChipClick(o.id)} // ✅ TRUYỀN CALLBACK CLICK
+                onClick={() => handleChipClick(o.id)}
               />
             ))}
           </div>
