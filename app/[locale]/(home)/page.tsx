@@ -1,4 +1,4 @@
-import DuolingoDragDrop from "@/components/DragDrop";
+
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 type Props = { params: Promise<{ locale: string }> };

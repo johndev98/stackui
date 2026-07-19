@@ -92,7 +92,7 @@ export async function kiemTraDapAn(
   }
 }
 
-export async function kiemTraDragDropQuiz(
+export async function CheckAnswersDragDropQuiz(
   courseSlug: string,
   lessonSlug: string | null,
   cauTraLoi: string[],
@@ -100,10 +100,18 @@ export async function kiemTraDragDropQuiz(
 ) {
   try {
     if (!courseSlug?.trim()) {
-      return { isCorrect: false, thongBao: "❌ Lỗi: Khóa học không hợp lệ.", slotStates: {} as Record<string, string> };
+      return {
+        isCorrect: false,
+        thongBao: "❌ Lỗi: Khóa học không hợp lệ.",
+        slotStates: {} as Record<string, "idle" | "correct" | "wrong">,
+      };
     }
     if (!quizId?.trim()) {
-      return { isCorrect: false, thongBao: "❌ Lỗi: Quiz ID không hợp lệ.", slotStates: {} as Record<string, string> };
+      return {
+        isCorrect: false,
+        thongBao: "❌ Lỗi: Quiz ID không hợp lệ.",
+        slotStates: {} as Record<string, "idle" | "correct" | "wrong">,
+      };
     }
 
     const fileName = lessonSlug ?? "_index";
@@ -114,16 +122,28 @@ export async function kiemTraDragDropQuiz(
     const { data } = parsed;
 
     if (!data?.dragDropQuiz || typeof data.dragDropQuiz !== "object") {
-      return { isCorrect: false, thongBao: "❌ Lỗi: Không tìm thấy dữ liệu quiz.", slotStates: {} as Record<string, string> };
+      return {
+        isCorrect: false,
+        thongBao: "❌ Lỗi: Không tìm thấy dữ liệu quiz.",
+        slotStates: {} as Record<string, "idle" | "correct" | "wrong">,
+      };
     }
     if (!(quizId in data.dragDropQuiz)) {
-      return { isCorrect: false, thongBao: `❌ Lỗi: Không tìm thấy quiz "${quizId}".`, slotStates: {} as Record<string, string> };
+      return {
+        isCorrect: false,
+        thongBao: `❌ Lỗi: Không tìm thấy quiz "${quizId}".`,
+        slotStates: {} as Record<string, "idle" | "correct" | "wrong">,
+      };
     }
 
     const quizData = data.dragDropQuiz[quizId];
     const dapAnDungStr = String(quizData.answers ?? "");
     if (!dapAnDungStr.trim()) {
-      return { isCorrect: false, thongBao: "❌ Lỗi: Đáp án quiz bị trống.", slotStates: {} as Record<string, string> };
+      return {
+        isCorrect: false,
+        thongBao: "❌ Lỗi: Đáp án quiz bị trống.",
+        slotStates: {} as Record<string, "idle" | "correct" | "wrong">,
+      };
     }
 
     const dapAnDung = dapAnDungStr
@@ -132,13 +152,17 @@ export async function kiemTraDragDropQuiz(
       .filter(Boolean);
 
     if (cauTraLoi.length !== dapAnDung.length) {
-      return { isCorrect: false, thongBao: "❌ Chưa điền đủ đáp án.", slotStates: {} as Record<string, string> };
+      return {
+        isCorrect: false,
+        thongBao: "❌ Chưa điền đủ đáp án.",
+        slotStates: {} as Record<string, "idle" | "correct" | "wrong">,
+      };
     }
 
     const choPhepKhongDau = Boolean(data.choPhepKhongDau ?? false);
 
     let isCorrect = true;
-    const slotStates: Record<string, "correct" | "wrong"> = {};
+    const slotStates: Record<string, "idle" | "correct" | "wrong"> = {};
     for (let i = 0; i < dapAnDung.length; i++) {
       const userAns = cauTraLoi[i] ?? "";
       const correct = dapAnDung[i];
@@ -157,7 +181,11 @@ export async function kiemTraDragDropQuiz(
       slotStates,
     };
   } catch (error) {
-    console.error("Error in kiemTraDragDropQuiz:", error);
-    return { isCorrect: false, thongBao: "❌ Lỗi khi kiểm tra đáp án.", slotStates: {} as Record<string, string> };
+    console.error("Error in CheckDragDropQuiz:", error);
+    return {
+      isCorrect: false,
+      thongBao: "❌ Lỗi khi kiểm tra đáp án.",
+      slotStates: {} as Record<string, "idle" | "correct" | "wrong">,
+    };
   }
 }

@@ -33,7 +33,6 @@ export type AnswerOption = { id: string; label: string };
 export type DragDropProps = {
   question: BlankSegment[];
   options: AnswerOption[];
-  correctAnswers?: Record<string, string>;
   accent?: string;
   mode?: "text" | "code";
   language?: BundledLanguage;
@@ -44,9 +43,6 @@ export type DragDropProps = {
   }>;
 };
 
-/* =========================================================
-   🎨 TOKYO NIGHT
-   ========================================================= */
 const TOKYO = {
   cardBg: "#1a1b26",
   surface: "#1e202e",
@@ -65,9 +61,6 @@ const TOKYO = {
   dotGreen: "#9ece6a",
 } as const;
 
-/* =========================================================
-   🧱 SORTABLE CHIP (ĐÁP ÁN KÉO ĐƯỢC + CLICK AUTO-FILL)
-   ========================================================= */
 function SortableChip({
   id,
   label,
@@ -151,14 +144,9 @@ function SortableChip({
     </motion.div>
   );
 }
-
-/* =========================================================
-   ⬜ DROP SLOT — ✅ ĐÃ SỬA: KÉO ĐƯỢC ĐỂ HOÁN ĐỔI GIỮA CÁC Ô
-   ========================================================= */
 function DropSlot({
   blank,
   filledLabel,
-  isOver,
   isActiveTarget,
   state,
   onClick,
@@ -166,13 +154,12 @@ function DropSlot({
 }: {
   blank: BlankSegment & { type: "blank" };
   filledLabel?: string;
-  isOver: boolean;
   isActiveTarget: boolean;
   state: "idle" | "correct" | "wrong";
   onClick: () => void;
   mode?: "text" | "code";
 }) {
-  // ✅ KEY FIX: LẤY ĐỦ TẤT CẢ THUỘC TÍNH TỪ useSortable
+
   const {
     setNodeRef,
     attributes,
@@ -182,7 +169,7 @@ function DropSlot({
     isDragging,
   } = useSortable({
     id: blank.id,
-    disabled: !filledLabel, // ✅ CHỈ KÉO ĐƯỢC KHI Ô ĐÃ CÓ ĐÁP ÁN
+    disabled: !filledLabel, 
   });
   const isCode = mode === "code";
 
@@ -222,7 +209,6 @@ function DropSlot({
   };
   const palette = isCode ? codeColors : textColors;
 
-  // ✅ Kết hợp sự kiện click: click thường = xóa đáp án, kéo >4px = hoán đổi
   const handleSlotClick = (e: React.MouseEvent) => {
     listeners?.onClick?.(e);
     onClick();
@@ -299,21 +285,15 @@ function DropSlot({
   );
 }
 
-/* =========================================================
-   🏆 COMPONENT CHÍNH
-   ========================================================= */
 export default function DragDrop({
   question,
   options,
-  correctAnswers,
   accent,
   mode = "text",
   language = "ts",
   onCheck,
 }: DragDropProps) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [overId, setOverId] = useState<string | null>(null);
   const [closestTargetId, setClosestTargetId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{
@@ -486,17 +466,9 @@ export default function DragDrop({
                     filledLabel={
                       answers[bid] ? labelOf[answers[bid]] : undefined
                     }
-                    isOver={overId === bid}
                     isActiveTarget={closestTargetId === bid}
                     state={result?.slotStates[bid] ?? "idle"}
-                    onClick={() => {
-                      setAnswers((p) => {
-                        const n = { ...p };
-                        delete n[bid];
-                        return n;
-                      });
-                      setResult(null);
-                    }}
+                    onClick={() => removeAnswer(bid)}
                   />,
                 );
               }
@@ -530,25 +502,30 @@ export default function DragDrop({
     blankHintOf,
     answers,
     labelOf,
-    overId,
     closestTargetId,
     result,
   ]);
 
   /* ---------- 🎯 LOGIC KÉO THẢ + HOÁN ĐỔI Ô TRỐNG ---------- */
+  const removeAnswer = (id: string) => {
+    setAnswers((p) => {
+      const n = { ...p };
+      delete n[id];
+      return n;
+    });
+    setResult(null);
+  };
+
   const handleDragStart = (e: DragStartEvent) => {
-    setActiveId(e.active.id as string);
     setClosestTargetId(null);
     setResult(null);
   };
 
   const handleDragOver = (e: DragOverEvent) => {
     const over = e.over?.id as string | null;
-    setOverId(over);
     if (over && blankIds.includes(over)) {
       setClosestTargetId(over);
     } else if (over === "question-drop-zone") {
-      // Đang hover trên vùng câu hỏi → tìm blank trống gần nhất
       const firstEmpty = blankIds.find((id) => !answers[id]);
       if (firstEmpty) setClosestTargetId(firstEmpty);
     } else if (!over) {
@@ -559,13 +536,10 @@ export default function DragDrop({
   const handleDragEnd = (e: DragEndEvent) => {
     const from = e.active.id as string;
     const overId_raw = e.over?.id as string | null;
-    // Nếu drop trên container, dùng closestTargetId (blank trống gần nhất)
     const to: string | null =
       (overId_raw && blankIds.includes(overId_raw) ? overId_raw : null) ??
       closestTargetId;
 
-    setActiveId(null);
-    setOverId(null);
     setClosestTargetId(null);
 
     if (!to || !blankIds.includes(to)) return;
@@ -617,24 +591,7 @@ export default function DragDrop({
         }
         setResult({ ...r, slotStates: st });
         if (!r.isCorrect) setShakeKey((k) => k + 1);
-        return;
       }
-      if (!correctAnswers) return;
-      const st: Record<string, "idle" | "correct" | "wrong"> = {};
-      let ok = true;
-      blankIds.forEach((id) => {
-        const v = answers[id] === correctAnswers[id];
-        st[id] = v ? "correct" : "wrong";
-        if (!v) ok = false;
-      });
-      setResult({
-        isCorrect: ok,
-        slotStates: st,
-        explanation: ok
-          ? "Tuyệt vời! Bạn đã làm đúng hoàn toàn 🎉"
-          : "Có vài chỗ chưa đúng, bạn thử kéo đổi lại nhé 💪",
-      });
-      if (!ok) setShakeKey((k) => k + 1);
     } finally {
       setLoading(false);
     }
@@ -679,17 +636,9 @@ export default function DragDrop({
                     filledLabel={
                       answers[seg.id] ? labelOf[answers[seg.id]] : undefined
                     }
-                    isOver={overId === seg.id}
                     isActiveTarget={closestTargetId === seg.id}
                     state={result?.slotStates[seg.id] ?? "idle"}
-                    onClick={() => {
-                      setAnswers((p) => {
-                        const n = { ...p };
-                        delete n[seg.id];
-                        return n;
-                      });
-                      setResult(null);
-                    }}
+                    onClick={() => removeAnswer(seg.id)}
                   />
                 ),
               )}
@@ -714,17 +663,9 @@ export default function DragDrop({
               filledLabel={
                 answers[seg.id] ? labelOf[answers[seg.id]] : undefined
               }
-              isOver={overId === seg.id}
               isActiveTarget={closestTargetId === seg.id}
               state={result?.slotStates[seg.id] ?? "idle"}
-              onClick={() => {
-                setAnswers((p) => {
-                  const n = { ...p };
-                  delete n[seg.id];
-                  return n;
-                });
-                setResult(null);
-              }}
+              onClick={() => removeAnswer(seg.id)}
             />
           ),
         )}
@@ -909,18 +850,8 @@ export default function DragDrop({
                     : undefined
                 }
               >
-                {result.isCorrect
-                  ? "🎉 Chính xác tuyệt đối!"
-                  : "😅 Chưa đúng hết, kéo đổi thử lại nhé"}
+                {result.explanation}
               </p>
-              {result.explanation && (
-                <p
-                  className="text-sm mt-1 opacity-90 font-normal"
-                  style={isCode ? { color: TOKYO.subtitle } : undefined}
-                >
-                  {result.explanation}
-                </p>
-              )}
             </motion.div>
           )}
         </AnimatePresence>

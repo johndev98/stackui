@@ -4,7 +4,7 @@ import { useMemo, useCallback } from "react";
 import { useParams } from "next/navigation";
 import DuolingoDragDrop from "@/components/DragDrop";
 import type { BlankSegment, AnswerOption } from "@/components/DragDrop";
-import { kiemTraDragDropQuiz } from "@/content/courses/_shared/actions";
+import { CheckAnswersDragDropQuiz } from "@/content/courses/_shared/actions";
 
 type DragDropQuizProps = {
   id: string;
@@ -83,7 +83,6 @@ export function DragDropQuiz({
   }>();
   const courseSlug = params.slug ?? params.courseSlug ?? "";
   const lessonSlug = params.lessonSlug ?? null;
-
   const blankSegments = useMemo(() => parseQuestion(question), [question]);
   const rawOptions = useMemo(() => parseOptions(options), [options]);
   const shuffledOptions = useMemo(
@@ -121,7 +120,7 @@ export function DragDropQuiz({
         const answerLabels = blankIds.map(
           (bid) => labelMap[userAnswers[bid]] ?? "",
         );
-        const res = await kiemTraDragDropQuiz(
+        const res = await CheckAnswersDragDropQuiz(
           courseSlug,
           lessonSlug,
           answerLabels,
