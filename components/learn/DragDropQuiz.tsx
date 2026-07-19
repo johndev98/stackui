@@ -4,7 +4,7 @@ import { useMemo, useCallback } from "react";
 import { useParams } from "next/navigation";
 import DuolingoDragDrop from "@/components/DragDrop";
 import type { BlankSegment, AnswerOption } from "@/components/DragDrop";
-import { CheckAnswersDragDropQuiz } from "@/content/courses/_shared/actions";
+import { CheckAnswersDragDropQuiz } from "@/components/learn/actions";
 
 type DragDropQuizProps = {
   id: string;

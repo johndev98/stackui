@@ -1,7 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useParams } from "next/navigation";
-import { kiemTraDapAn } from "@/content/courses/_shared/actions";
+import { kiemTraDapAn } from "@/components/learn/actions";
 
 type KetQua = { dung: boolean; thongBao: string };
 

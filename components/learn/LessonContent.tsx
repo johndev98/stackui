@@ -4,7 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkFrontmatter from "remark-frontmatter";
 import rehypePrettyCode from "rehype-pretty-code";
 import { useMDXComponents } from "@/mdx-components";
-import { FillBlankQuiz } from "@/content/courses/_shared/ClientQuiz";
+import { FillBlankQuiz } from "@/components/learn/ClientQuiz";
 import { DragDropQuiz } from "@/components/learn/DragDropQuiz";
 import LessonSteps from "@/components/learn/LessonSteps";
 
@@ -32,6 +32,7 @@ export async function LessonContent({
       `${process.cwd()}/content/courses/${courseSlug}/${fileName}.mdx`,
       "utf8",
     );
+    //tách ra 2 phần: frontmatter và content
     const parsed = matter(file);
     content = parsed.content;
   } catch {
@@ -42,7 +43,7 @@ export async function LessonContent({
     );
   }
 
-  const tatCaComponents = {
+  const AllComponents = {
     ...useMDXComponents(),
     FillBlankQuiz,
     DragDropQuiz,
@@ -125,7 +126,7 @@ export async function LessonContent({
                   ],
                 },
               }}
-              components={tatCaComponents}
+              components={AllComponents}
             />
           ))}
         </LessonSteps>
@@ -143,7 +144,7 @@ export async function LessonContent({
               ],
             },
           }}
-          components={tatCaComponents}
+          components={AllComponents}
         />
       )}
     </div>
