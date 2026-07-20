@@ -5,12 +5,17 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 export function SplitLayout({ children }: { children: React.ReactNode }) {
   const childArray = React.Children.toArray(children);
 
-  const [splitRatio, setSplitRatio] = useState<number>(() => {
-    if (typeof window === "undefined") return 30;
-    return Math.min(Math.max(parseInt(localStorage.getItem("splitRatio") || "30", 10), 15), 50);
-  });
+  const [splitRatio, setSplitRatio] = useState<number>(30);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    if (mountedRef.current) return;
+    mountedRef.current = true;
+    const saved = parseInt(localStorage.getItem("splitRatio") || "30", 10);
+    setSplitRatio(Math.min(Math.max(saved, 15), 50));
+  }, []);
 
   const handleDragStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,7 +55,7 @@ export function SplitLayout({ children }: { children: React.ReactNode }) {
   return (
     <div ref={containerRef} className="flex flex-col md:flex-row gap-0 h-full">
       <div
-        className="w-full md:h-full md:overflow-y-auto md:pr-4"
+       className="w-full min-h-0 overflow-y-auto md:h-full md:pr-4"
         style={{ flex: `0 0 ${splitRatio}%` }}
       >
         {childArray[0]}
@@ -68,7 +73,7 @@ export function SplitLayout({ children }: { children: React.ReactNode }) {
         />
       </div>
 
-      <div className="flex-1 min-w-0 md:h-full md:overflow-y-auto">{childArray[1]}</div>
+      <div className="flex-1 min-w-0 min-h-0 overflow-y-auto">{childArray[1]}</div>
     </div>
   );
 }

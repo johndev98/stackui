@@ -745,7 +745,7 @@ export default function DragDrop({
         {/* ✅ NÚT ICON RESET CỐ ĐỊNH GÓC TRÊN BÊN PHẢI */}
         <button
           onClick={reset}
-          className="absolute top-2 right-4 z-10 p-2 rounded-lg transition-all  outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+          className="absolute top-2 right-4 p-2 rounded-lg transition-all  outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
           style={{
             backgroundColor: isCode ? TOKYO.surface : "#f3f4f6",
             color: isCode ? TOKYO.text : "#6b7280",
