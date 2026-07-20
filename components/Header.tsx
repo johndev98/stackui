@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import Link from "next/link";
+import { motion, spring } from "motion/react";
 
 export default function Header() {
   const t = useTranslations("Header");
@@ -16,19 +17,58 @@ export default function Header() {
   };
 
   const navClass = (href: string) =>
-    `transition-colors hover:text-primary ${
-      href === "/"
-        ? pathname === "/"
-        : pathname.startsWith(href)
-          ? "text-primary"
-          : ""
+    `transition-colors hover:text-primary ${href === "/"
+      ? pathname === "/"
+      : pathname.startsWith(href)
+        ? "text-primary"
+        : ""
     }`;
+  const text = "Unezen";
 
+  const container = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.03,
+      },
+    },
+  } as const;
+
+  const letter = {
+    hidden: {
+      opacity: 0,
+      y: -20,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 500,
+        damping: 30,
+      },
+    },
+  } as const;
   return (
     <header className="sticky top-0 z-50 bg-page-bg/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
         <Link href={`/${locale}`} className={navClass("/")}>
-          <span className="font-extrabold text-4xl text-primary">Unezen</span>
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="visible"
+            className="flex"
+          >
+            {text.split("").map((char, index) => (
+              <motion.span
+                key={index}
+                variants={letter}
+                className="font-extrabold text-4xl text-primary"
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.div>
         </Link>
 
         <nav className="flex items-center gap-10 text-sm font-medium">
