@@ -620,7 +620,7 @@ export default function DragDrop({
         <motion.div
           key={shakeKey}
           {...mp}
-          className="font-mono p-3 text-[13px] md:text-[17px] leading-5 md:leading-6 select-none overflow-x-auto"
+          className="font-mono  p-3 text-[13px] md:text-[17px] leading-5 md:leading-6 select-none overflow-x-auto"
           style={{
             color: TOKYO.text,
             whiteSpace: "pre",
@@ -632,22 +632,22 @@ export default function DragDrop({
             : isMounted && shiki && renderedCode
               ? renderedCode
               : question.map((seg, i) =>
-                  seg.type === "text" ? (
-                    <span key={i}>{seg.content}</span>
-                  ) : (
-                    <DropSlot
-                      key={seg.id}
-                      blank={seg}
-                      mode="code"
-                      filledLabel={
-                        answers[seg.id] ? labelOf[answers[seg.id]] : undefined
-                      }
-                      isActiveTarget={closestTargetId === seg.id}
-                      state={result?.slotStates[seg.id] ?? "idle"}
-                      onClick={() => removeAnswer(seg.id)}
-                    />
-                  ),
-                )}
+                seg.type === "text" ? (
+                  <span key={i}>{seg.content}</span>
+                ) : (
+                  <DropSlot
+                    key={seg.id}
+                    blank={seg}
+                    mode="code"
+                    filledLabel={
+                      answers[seg.id] ? labelOf[answers[seg.id]] : undefined
+                    }
+                    isActiveTarget={closestTargetId === seg.id}
+                    state={result?.slotStates[seg.id] ?? "idle"}
+                    onClick={() => removeAnswer(seg.id)}
+                  />
+                ),
+              )}
         </motion.div>
       );
     }
@@ -748,15 +748,15 @@ export default function DragDrop({
             style={
               isCode
                 ? {
-                    backgroundColor: closestTargetId
-                      ? `${TOKYO.hover}11`
-                      : TOKYO.surface,
-                    borderColor: closestTargetId ? TOKYO.hover : TOKYO.border,
-                  }
+                  backgroundColor: closestTargetId
+                    ? `${TOKYO.hover}11`
+                    : TOKYO.surface,
+                  borderColor: closestTargetId ? TOKYO.hover : TOKYO.border,
+                }
                 : {
-                    backgroundColor: closestTargetId ? "#e5f7ff" : "#f9fafb",
-                    borderColor: closestTargetId ? "#1cb0f6" : "#f3f4f6",
-                  }
+                  backgroundColor: closestTargetId ? "#e5f7ff" : "#f9fafb",
+                  borderColor: closestTargetId ? "#1cb0f6" : "#f3f4f6",
+                }
             }
           >
             {renderQuestion()}
@@ -791,13 +791,13 @@ export default function DragDrop({
                   style={
                     isCode
                       ? {
-                          backgroundColor: TOKYO.cardBg,
-                          borderColor: TOKYO.border,
-                        }
+                        backgroundColor: TOKYO.cardBg,
+                        borderColor: TOKYO.border,
+                      }
                       : {
-                          backgroundColor: "#eff6ff",
-                          borderColor: "transparent",
-                        }
+                        backgroundColor: "#eff6ff",
+                        borderColor: "transparent",
+                      }
                   }
                 >
                   {options.map((o) => (
@@ -887,9 +887,9 @@ function colorDarken(hex: string, percent: number): string {
   const num = parseInt(
     h.length === 3
       ? h
-          .split("")
-          .map((c) => c + c)
-          .join("")
+        .split("")
+        .map((c) => c + c)
+        .join("")
       : h,
     16,
   );
