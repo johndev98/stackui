@@ -132,14 +132,15 @@ function SortableChip({
       aria-disabled={used}
       suppressHydrationWarning
       layout
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      whileHover={{ y: -2 }}
-      whileDrag={{ scale: 1.08 }}
-      className={`${isCode ? "font-mono text-sm" : "font-bold text-base"} 
-        px-3 py-1.5 rounded-lg cursor-grab active:cursor-grabbing select-none
-        border-b-[3px] shadow-sm outline-none
-        focus-visible:ring-2 focus-visible:ring-offset-1
-        ${isDragging ? "" : "hover:-translate-y-0.5 active:translate-y-0 active:border-b-0"}`}
+      transition={{ type: "spring", stiffness: 350, damping: 26 }}
+      // ✅ Chỉ dùng hiệu ứng của Framer Motion, loại bỏ trùng lặp với CSS
+      whileHover={{ y: -3, boxShadow: `0 4px 12px ${accent}33` }}
+      whileDrag={{ scale: 1.08, y: -2 }}
+      // ✅ Đặt chiều cao cố định + viền nền giả để không thay đổi kích thước khi hover
+      className={`${isCode ? "font-mono text-xs md:text-sm" : "font-bold text-base"} 
+        px-2.5 py-1.5 rounded-lg cursor-grab active:cursor-grabbing select-none
+        border-b-[3px] border-b-transparent shadow-sm outline-none
+         box-border`}
     >
       {label}
     </motion.div>
@@ -240,7 +241,7 @@ function DropSlot({
       suppressHydrationWarning
       layout
       transition={{ type: "spring", stiffness: 350, damping: 28 }}
-      whileDrag={{ scale: 1.08 }} // ✅ Phồng nhẹ khi kéo ô
+      whileDrag={{ scale: 1.08 }}
       animate={{
         scale: isActiveTarget && !filledLabel ? 1.08 : 1,
         boxShadow:
@@ -251,16 +252,14 @@ function DropSlot({
       className={`inline-flex items-center justify-center rounded-md border-b-2 font-semibold transition-all align-middle outline-none
         ${filledLabel ? "cursor-grab active:cursor-grabbing hover:brightness-110 focus-visible:ring-2" : ""} 
         ${isCode ? "font-mono text-sm" : "text-base"}`}
-      // ✅ Áp dụng transform + style khi kéo để ô di chuyển theo con trỏ
       style={{
         transform: CSS.Translate.toString(transform),
         transition,
         opacity: isDragging ? 0.4 : 1,
         zIndex: isDragging ? 9999 : "auto",
         minWidth: filledLabel ? "auto" : isCode ? "56px" : "76px",
-        height: isCode ? "26px" : "32px",
+        height: isCode ? "25px" : "32px",
         padding: isCode ? "0 8px" : "0 14px",
-        borderWidth: isActiveTarget ? "2px" : "1px",
         borderColor: palette.border[state === "idle" ? "idle" : state],
         borderStyle: filledLabel ? "solid" : "dashed",
         backgroundColor: palette.bg[state === "idle" ? "idle" : state],
@@ -668,7 +667,7 @@ export default function DragDrop({
         <motion.div
           key={shakeKey}
           {...mp}
-          className="font-mono p-3 text-[13px] md:text-[17px] leading-6 md:leading-7 select-none overflow-x-auto"
+          className="font-mono p-3 text-[13px] md:text-[17px] leading-5 md:leading-6 select-none overflow-x-auto"
           style={{
             color: TOKYO.text,
             whiteSpace: "pre",
@@ -736,31 +735,48 @@ export default function DragDrop({
       onDragEnd={handleDragEnd}
     >
       <div
-        className="w-full max-w-2xl mx-auto rounded-3xl shadow-lg border my-6 p-5 md:p-8"
+        className="w-full max-w-3xl mx-auto rounded-2xl p-4 relative"
         style={
           isCode
             ? { backgroundColor: TOKYO.cardBg, borderColor: TOKYO.border }
             : { backgroundColor: "#fff", borderColor: "#f3f4f6" }
         }
       >
+        {/* ✅ NÚT ICON RESET CỐ ĐỊNH GÓC TRÊN BÊN PHẢI */}
+        <button
+          onClick={reset}
+          className="absolute top-2 right-4 z-10 p-2 rounded-lg transition-all  outline-none focus-visible:ring-2 focus-visible:ring-offset-1"
+          style={{
+            backgroundColor: isCode ? TOKYO.surface : "#f3f4f6",
+            color: isCode ? TOKYO.text : "#6b7280",
+            border: `1px solid ${isCode ? TOKYO.border : "#e5e7eb"}`,
+          }}
+          title="Làm lại"
+          aria-label="Làm lại"
+        >
+          <motion.svg
+            whileHover={{ rotate: -90 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+            w-full max-w-2xl mx-auto rounded-3xl shadow-lg border my-6 p-5
+            md:p-8 relative
+            <path d="M3 3v5h5" />
+          </motion.svg>
+        </button>
+
         {isCode && (
-          <div className="flex items-center justify-between mb-3 -mt-1">
-            <div className="flex gap-1.5">
-              <span
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: TOKYO.dotRed }}
-              />
-              <span
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: TOKYO.dotYellow }}
-              />
-              <span
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: TOKYO.dotGreen }}
-              />
-            </div>
+          <div className="flex items-center mb-3 ">
             <span
-              className="text-xs font-mono px-2.5 py-1 rounded-md"
+              className="text-sm font-mono px-2.5 py-0.5 rounded-md"
               style={{ backgroundColor: TOKYO.surface, color: TOKYO.subtitle }}
             >
               .{language || "ts"}
@@ -775,7 +791,7 @@ export default function DragDrop({
         >
           <div
             ref={setQuestionDropRef}
-            className="mb-6  md:p-5 rounded-2xl min-h-25 border overflow-x-auto transition-colors"
+            className="mb-4 md:p-5 rounded-2xl  overflow-x-auto transition-colors"
             style={
               isCode
                 ? {
@@ -794,51 +810,74 @@ export default function DragDrop({
           </div>
         </SortableContext>
 
-        {!(result?.isCorrect && isCode) && (
-          <SortableContext
-            items={options.map((o) => o.id)}
-            strategy={horizontalListSortingStrategy}
-          >
-            <div
-              className="flex flex-wrap gap-2.5 p-3 rounded-2xl min-h-15 mb-5 border"
-              style={
-                isCode
-                  ? {
-                      backgroundColor: TOKYO.surfaceDark,
-                      borderColor: TOKYO.border,
-                    }
-                  : { backgroundColor: "#eff6ff", borderColor: "transparent" }
-              }
+        {/* ✅ Vùng đáp án: thu nhỏ mượt mà khi trả lời đúng */}
+        <AnimatePresence initial={false}>
+          {!(result?.isCorrect && isCode) && (
+            <motion.div
+              key="options-wrapper"
+              layout
+              initial={{ opacity: 1, height: "auto" }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{
+                opacity: 0,
+                height: 0,
+                marginTop: 0,
+                marginBottom: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+                overflow: "hidden",
+              }}
+              transition={{ type: "spring", stiffness: 200, damping: 28 }}
             >
-              {options.map((o) => (
-                <SortableChip
-                  key={o.id}
-                  id={o.id}
-                  label={o.label}
-                  used={usedIds.includes(o.id)}
-                  accent={finalAccent}
-                  mode={mode}
-                  onClick={() => handleChipClick(o.id)}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        )}
+              <SortableContext
+                items={options.map((o) => o.id)}
+                strategy={horizontalListSortingStrategy}
+              >
+                <div
+                  className="flex flex-wrap gap-2.5 justify-center m-5 "
+                  style={
+                    isCode
+                      ? {
+                          backgroundColor: TOKYO.cardBg,
+                          borderColor: TOKYO.border,
+                        }
+                      : {
+                          backgroundColor: "#eff6ff",
+                          borderColor: "transparent",
+                        }
+                  }
+                >
+                  {options.map((o) => (
+                    <SortableChip
+                      key={o.id}
+                      id={o.id}
+                      label={o.label}
+                      used={usedIds.includes(o.id)}
+                      accent={finalAccent}
+                      mode={mode}
+                      onClick={() => handleChipClick(o.id)}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
+        {/* ✅ Vùng nút KIỂM TRA: biến mất mượt khi trả lời đúng */}
         <motion.div
           layout
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className={`flex gap-3 mb-2 ${
-            result?.isCorrect && isCode ? "justify-center" : "justify-end"
-          }`}
+          transition={{ type: "spring", stiffness: 200, damping: 28 }}
+          className="flex justify-end mb-2"
         >
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {!(result?.isCorrect && isCode) && (
               <motion.div
-                key="check"
+                key="check-btn"
+                layout
                 initial={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.35 }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ type: "spring", stiffness: 220, damping: 26 }}
                 className="flex-1"
               >
                 <DuolingoButton
@@ -854,25 +893,6 @@ export default function DragDrop({
               </motion.div>
             )}
           </AnimatePresence>
-          <motion.div
-            layout
-            transition={{
-              type: "spring",
-              stiffness: 120,
-              damping: 18,
-              mass: 2,
-              duration: 1,
-            }}
-          >
-            <DuolingoButton
-              variant="primary"
-              onClick={reset}
-              color={isCode ? TOKYO.border : "#f3f4f6"}
-              className={isCode ? "text-gray-200" : "text-gray-600"}
-            >
-              LÀM LẠI
-            </DuolingoButton>
-          </motion.div>
         </motion.div>
       </div>
 
