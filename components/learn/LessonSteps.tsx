@@ -49,10 +49,10 @@ export default function LessonSteps({
   };
 
   return (
-    <div className="relative">
-      <div className=" ">{currentStepContent}</div>
+    <div className="relative flex flex-col h-[calc(100vh-8rem)]">
+      <div className="flex-1 min-h-0 overflow-hidden">{currentStepContent}</div>
 
-      <div className="sticky bottom-0 left-0 right-0 border-t border-white/10 bg-page-bg/90 backdrop-blur-md py-4 px-6 flex items-center justify-between gap-4">
+      <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-page-bg/90 backdrop-blur-md py-4 px-6 flex items-center justify-between gap-4">
         <button
           onClick={() => setActiveStep(Math.max(0, safeActiveStep - 1))}
           disabled={safeActiveStep === 0}

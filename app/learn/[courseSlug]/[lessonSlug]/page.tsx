@@ -39,7 +39,7 @@ export default async function LessonPage({ params }: Props) {
       : undefined;
 
   return (
-    <div className="py-8  mx-auto">
+    <div className="mx-auto">
       <Link
         href={`/learn/${course.slug}`}
         className="inline-flex items-center gap-2 text-content hover:text-heading transition-colors mb-6"
