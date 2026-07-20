@@ -61,7 +61,7 @@ export function SplitLayout({ children }: { children: React.ReactNode }) {
         onMouseDown={handleDragStart}
       >
         <div
-          className="w-0.5 h-10 rounded-full transition-colors"
+          className="w-px h-full rounded-full transition-colors"
           style={{
             backgroundColor: isDragging ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.15)",
           }}
