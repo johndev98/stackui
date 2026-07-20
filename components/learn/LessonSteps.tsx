@@ -1,7 +1,40 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  SplitLayoutFooterContext,
+  type SplitLayoutFooterContextValue,
+} from "./SplitLayoutFooterContext";
+
+type StepContentAreaProps = {
+  stepContent: React.ReactNode;
+  navBar: React.ReactNode;
+  hasSplitLayout: boolean;
+};
+
+function StepContentArea({ stepContent, navBar, hasSplitLayout }: StepContentAreaProps) {
+  const [footerRendered, setFooterRendered] = useState(hasSplitLayout);
+
+  const contextValue: SplitLayoutFooterContextValue = useMemo(
+    () => ({
+      navBar,
+      onRendered: () => setFooterRendered(true),
+    }),
+    [navBar],
+  );
+
+  return (
+    <SplitLayoutFooterContext.Provider value={contextValue}>
+      <div className="flex-1 min-h-0 overflow-hidden">{stepContent}</div>
+      {!footerRendered && (
+        <div className="shrink-0 border-t border-white/10 bg-page-bg/90 backdrop-blur-md py-4 px-6 flex items-center justify-between gap-4">
+          {navBar}
+        </div>
+      )}
+    </SplitLayoutFooterContext.Provider>
+  );
+}
 
 type LessonStepsProps = {
   children: React.ReactNode;
@@ -10,6 +43,7 @@ type LessonStepsProps = {
   nextLessonHref?: string;
   learnListHref?: string;
   hasStepBlocks?: boolean;
+  stepHasSplitLayout?: boolean[];
 };
 
 export default function LessonSteps({
@@ -19,6 +53,7 @@ export default function LessonSteps({
   nextLessonHref,
   learnListHref,
   hasStepBlocks,
+  stepHasSplitLayout,
 }: LessonStepsProps) {
   const router = useRouter();
   const steps = useMemo(() => React.Children.toArray(children), [children]);
@@ -27,32 +62,27 @@ export default function LessonSteps({
   const [navigationError, setNavigationError] = useState<string | null>(null);
   const lastIndex = Math.max(0, steps.length - 1);
 
-  if (steps.length <= 1 && !hasStepBlocks) {
-    return <div>{children}</div>;
-  }
-
-  // Ensure activeStep is within bounds
   const safeActiveStep = Math.min(activeStep, Math.max(0, steps.length - 1));
-  const currentStepContent = steps[safeActiveStep];
 
-  const handleNavigate = (href: string) => {
-    try {
-      if (!href || !href.trim()) {
-        setNavigationError("Đường dẫn không hợp lệ. Vui lòng thử lại.");
-        return;
+  const handleNavigate = useCallback(
+    (href: string) => {
+      try {
+        if (!href || !href.trim()) {
+          setNavigationError("Đường dẫn không hợp lệ. Vui lòng thử lại.");
+          return;
+        }
+        router.push(href);
+      } catch (error) {
+        console.error("Navigation error:", error);
+        setNavigationError("Không thể điều hướng. Vui lòng thử lại.");
       }
-      router.push(href);
-    } catch (error) {
-      console.error("Navigation error:", error);
-      setNavigationError("Không thể điều hướng. Vui lòng thử lại.");
-    }
-  };
+    },
+    [router],
+  );
 
-  return (
-    <div className="relative flex flex-col h-[calc(100vh-8rem)]">
-      <div className="flex-1 min-h-0 overflow-hidden">{currentStepContent}</div>
-
-      <div className="absolute max-w-xl w-full bottom-0 right-0 py-4 px-6 flex items-center bg-page-bg justify-between gap-4">
+  const navBar = useMemo(
+    () => (
+      <>
         <button
           onClick={() => setActiveStep(Math.max(0, safeActiveStep - 1))}
           disabled={safeActiveStep === 0}
@@ -77,13 +107,32 @@ export default function LessonSteps({
         >
           {safeActiveStep === lastIndex ? "Hoàn tất" : "Next"}
         </button>
-      </div>
+      </>
+    ),
+    [safeActiveStep, steps.length, lastIndex],
+  );
+
+  if (steps.length <= 1 && !hasStepBlocks) {
+    return <div>{children}</div>;
+  }
+
+  const currentStepContent = steps[safeActiveStep];
+  const currentStepHasSplit = stepHasSplitLayout?.[safeActiveStep] ?? false;
+
+  return (
+    <div className="relative flex flex-col h-[calc(100vh-8rem)]">
+      <StepContentArea
+        key={safeActiveStep}
+        stepContent={currentStepContent}
+        navBar={navBar}
+        hasSplitLayout={currentStepHasSplit}
+      />
 
       {showCompleteDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6">
           <div className="w-full max-w-xl rounded-3xl border border-white/10 bg-page-bg p-6 shadow-2xl">
             <div className="mb-4 text-xl font-semibold text-heading">
-              Bạn đã hoàn thành bài học "{currentLessonTitle ?? "này"}"
+              Bạn đã hoàn thành bài học &ldquo;{currentLessonTitle ?? "này"}&rdquo;
             </div>
             <p className="mb-6 text-content">
               {nextLessonTitle

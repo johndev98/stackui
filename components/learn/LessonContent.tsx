@@ -100,6 +100,10 @@ export async function LessonContent({
   const hasStepBlocks = stepContents.length > 0;
   if (!hasStepBlocks) stepContents = [content];
 
+  const stepHasSplitLayout = stepContents.map((s) =>
+    /<SplitLayout[\s/>]/i.test(s),
+  );
+
   return (
     <div className="space-y-4">
       {hasStepBlocks ? (
@@ -109,6 +113,7 @@ export async function LessonContent({
           nextLessonHref={nextLessonHref}
           learnListHref={learnListHref}
           hasStepBlocks={hasStepBlocks}
+          stepHasSplitLayout={stepHasSplitLayout}
         >
           {stepContents.map((stepSource, index) => (
             <MDXRemote
