@@ -23,6 +23,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { motion, AnimatePresence } from "motion/react";
 import { DuolingoButton } from "@/components/ui/DuolingoButton";
 import type { Highlighter, ThemedToken, BundledLanguage } from "shiki";
+import { getHighlighter } from "@/lib/shiki";
 
 /* =========================================================
    🔌 KIỂU DỮ LIỆU
@@ -314,55 +315,7 @@ export default function DragDrop({
 
   useEffect(() => {
     setIsMounted(true);
-    import("shiki").then(async ({ createHighlighter }) => {
-      const h = await createHighlighter({
-        themes: ["dark-plus"],
-        langs: [
-          "ts",
-          "tsx",
-          "js",
-          "jsx",
-          "html",
-          "css",
-          "scss",
-          "less",
-          "vue",
-          "svelte",
-          "py",
-          "rb",
-          "php",
-          "sh",
-          "bash",
-          "bat",
-          "cmd",
-          "ps1",
-          "json",
-          "yaml",
-          "yml",
-          "xml",
-          "md",
-          "c",
-          "cpp",
-          "rs",
-          "go",
-          "java",
-          "kt",
-          "kts",
-          "cs",
-          "dart",
-          "swift",
-          "scala",
-          "lua",
-          "sql",
-          "graphql",
-          "prisma",
-          "dockerfile",
-          "toml",
-          "ini",
-        ],
-      });
-      setShiki(h);
-    });
+    getHighlighter().then(setShiki);
   }, []);
 
   const isCode = mode === "code";

@@ -15,14 +15,6 @@ export function SplitLayout({ children }: { children: React.ReactNode }) {
   const [splitRatio, setSplitRatio] = useState<number>(30);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const mountedRef = useRef(false);
-
-  useEffect(() => {
-    if (mountedRef.current) return;
-    mountedRef.current = true;
-    const saved = parseInt(localStorage.getItem("splitRatio") || "30", 10);
-    setSplitRatio(Math.min(Math.max(saved, 15), 50));
-  }, []);
 
   const handleDragStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -54,10 +46,6 @@ export function SplitLayout({ children }: { children: React.ReactNode }) {
       document.body.style.userSelect = "";
     };
   }, [isDragging]);
-
-  useEffect(() => {
-    localStorage.setItem("splitRatio", String(splitRatio));
-  }, [splitRatio]);
 
   return (
     <div ref={containerRef} className="flex flex-col md:flex-row gap-0 h-full">
