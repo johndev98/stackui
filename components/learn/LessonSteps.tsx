@@ -11,27 +11,32 @@ type StepContentAreaProps = {
   stepContent: React.ReactNode;
   navBar: React.ReactNode;
   hasSplitLayout: boolean;
+  active: boolean;
 };
 
-function StepContentArea({ stepContent, navBar, hasSplitLayout }: StepContentAreaProps) {
-  const [footerRendered, setFooterRendered] = useState(hasSplitLayout);
-
+function StepContentArea({
+  stepContent,
+  navBar,
+  hasSplitLayout,
+  active,
+}: StepContentAreaProps) {
   const contextValue: SplitLayoutFooterContextValue = useMemo(
-    () => ({
-      navBar,
-      onRendered: () => setFooterRendered(true),
-    }),
+    () => ({ navBar, onRendered: () => {} }),
     [navBar],
   );
 
   return (
     <SplitLayoutFooterContext.Provider value={contextValue}>
-      <div className="flex-1 min-h-0 overflow-hidden">{stepContent}</div>
-      {!footerRendered && (
-        <div className="shrink-0 border-t border-white/10 bg-page-bg/90 backdrop-blur-md py-4 px-6 flex items-center justify-between gap-4">
-          {navBar}
-        </div>
-      )}
+      <div
+        className={`flex flex-col flex-1 min-h-0 ${active ? "" : "hidden"}`}
+      >
+        <div className="flex-1 min-h-0 overflow-hidden">{stepContent}</div>
+        {!hasSplitLayout && (
+          <div className="shrink-0 border-t border-white/10 bg-page-bg/90 backdrop-blur-md py-4 px-6 flex items-center justify-between gap-4">
+            {navBar}
+          </div>
+        )}
+      </div>
     </SplitLayoutFooterContext.Provider>
   );
 }
@@ -116,17 +121,17 @@ export default function LessonSteps({
     return <div>{children}</div>;
   }
 
-  const currentStepContent = steps[safeActiveStep];
-  const currentStepHasSplit = stepHasSplitLayout?.[safeActiveStep] ?? false;
-
   return (
     <div className="relative flex flex-col h-[calc(100vh-8rem)]">
-      <StepContentArea
-        key={safeActiveStep}
-        stepContent={currentStepContent}
-        navBar={navBar}
-        hasSplitLayout={currentStepHasSplit}
-      />
+      {steps.map((stepContent, index) => (
+        <StepContentArea
+          key={index}
+          stepContent={stepContent}
+          navBar={navBar}
+          hasSplitLayout={stepHasSplitLayout?.[index] ?? false}
+          active={index === safeActiveStep}
+        />
+      ))}
 
       {showCompleteDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6">
