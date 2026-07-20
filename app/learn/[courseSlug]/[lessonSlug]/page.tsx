@@ -1,8 +1,6 @@
 import { getCourseBySlug } from "@/data/fakeCourses";
 import { getLessonBySlug, getLessonsByCourseId } from "@/data/fakeLessons";
 import { LessonContent } from "@/components/learn/LessonContent";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -40,14 +38,6 @@ export default async function LessonPage({ params }: Props) {
 
   return (
     <div className="mx-auto">
-      <Link
-        href={`/learn/${course.slug}`}
-        className="inline-flex items-center gap-2 text-content hover:text-heading transition-colors mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span className="text-sm">Quay lại danh sách bài học</span>
-      </Link>
-      <h1 className="text-2xl font-bold mb-6">{lesson.title}</h1>
       <LessonContent
         courseSlug={course.slug}
         lessonSlug={lesson.slug}

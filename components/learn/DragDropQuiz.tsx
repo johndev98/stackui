@@ -144,7 +144,7 @@ export function DragDropQuiz({
   const finalAccent = accent ?? (isCode ? "#7aa2f7" : "#58cc02");
 
   return (
-    <div className="md:m-7">
+    <div className="md:m-8">
       <DuolingoDragDrop
         question={blankSegments}
         options={shuffledOptions}
